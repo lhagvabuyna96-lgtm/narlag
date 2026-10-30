@@ -14,6 +14,32 @@
     });
   }
 
+  document.querySelectorAll("[data-account]").forEach(function (menu) {
+    var button = menu.querySelector("[data-account-btn]");
+    if (!button) return;
+    button.addEventListener("click", function (event) {
+      event.stopPropagation();
+      var open = menu.classList.toggle("is-open");
+      button.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
+  document.addEventListener("click", function (event) {
+    document.querySelectorAll("[data-account].is-open").forEach(function (menu) {
+      if (menu.contains(event.target)) return;
+      menu.classList.remove("is-open");
+      var button = menu.querySelector("[data-account-btn]");
+      if (button) button.setAttribute("aria-expanded", "false");
+    });
+  });
+  document.addEventListener("keydown", function (event) {
+    if (event.key !== "Escape") return;
+    document.querySelectorAll("[data-account].is-open").forEach(function (menu) {
+      menu.classList.remove("is-open");
+      var button = menu.querySelector("[data-account-btn]");
+      if (button) button.setAttribute("aria-expanded", "false");
+    });
+  });
+
   document.querySelectorAll(".faq__item").forEach(function (item) {
     var button = item.querySelector("button");
     if (!button) return;
@@ -72,7 +98,8 @@
           query.set(name, estimator.elements[name].value || "0");
         });
         if (estimator.elements.edge.checked) query.set("edge", "1");
-        link.href = "zahialga.php?" + query.toString();
+        var base = (link.getAttribute("href") || "zahialga.php").split("?")[0];
+        link.href = base + "?" + query.toString();
       }
     }
 

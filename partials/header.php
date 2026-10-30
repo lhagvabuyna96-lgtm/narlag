@@ -1,7 +1,9 @@
 <?php
+require_once __DIR__ . "/../includes/auth.php";
 $page = $page ?? "home";
 $title = $title ?? "Нарлаг";
 $desc = $desc ?? "Зуслангийн зүлэг тэгшлэх, мод засах, багаж хэрэгсэл түрээслэх болон худалдах үйлчилгээ.";
+$narlagUser = $narlagUser ?? narlag_user();
 
 function narlag_active(string $id, string $page): string
 {
@@ -55,6 +57,23 @@ function narlag_active(string $id, string $page): string
     </nav>
     <div class="nav__actions">
       <a class="nav__phone" href="tel:+97699112244">9911-2244</a>
+      <div class="account" data-account>
+        <button class="account__btn" type="button" data-account-btn aria-expanded="false" aria-haspopup="true">
+          <?= $narlagUser ? htmlspecialchars((string) $narlagUser["name"], ENT_QUOTES, "UTF-8") : "Профайл" ?>
+        </button>
+        <div class="account__menu">
+          <?php if ($narlagUser): ?>
+            <a href="profile.php">Профайл</a>
+            <a href="zahialguud.php">Миний захиалга</a>
+            <form action="garah.php" method="post">
+              <button type="submit">Гарах</button>
+            </form>
+          <?php else: ?>
+            <a href="nevtreh.php">Нэвтрэх</a>
+            <a href="burtgel.php">Бүртгүүлэх</a>
+          <?php endif; ?>
+        </div>
+      </div>
       <button class="basket-btn" type="button" data-open-basket>
         Сагс <strong data-basket-count hidden>0</strong>
       </button>

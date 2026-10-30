@@ -95,6 +95,9 @@ async function renderPage(res, view, data = {}) {
     toolsHtml: "",
     scripts: [],
     error: "",
+    notice: "",
+    passwordError: "",
+    draft: null,
     nextPath: "/",
     orders: [],
     offer: "",
@@ -167,7 +170,7 @@ app.get(["/zahialga", "/zahialga.php"], asyncRoute((req, res) => renderPage(res,
 })));
 
 app.get("/nevtreh", asyncRoute((req, res) => {
-  if (req.session.user) return res.redirect(req.session.user.role === "admin" ? "/admin" : "/zahialguud");
+  if (req.session.user) return res.redirect(req.session.user.role === "admin" ? "/admin" : "/profile");
   return renderPage(res, "auth", {
     page: "login",
     title: "Нэвтрэх — Нарлаг",
@@ -192,11 +195,12 @@ app.post("/nevtreh", asyncRoute(async (req, res) => {
     });
   }
   req.session.user = db.publicUser(row);
-  req.session.save(() => res.redirect(nextPath === "/" && row.role === "admin" ? "/admin" : nextPath));
+  const landing = row.role === "admin" ? "/admin" : "/profile";
+  req.session.save(() => res.redirect(nextPath === "/" ? landing : nextPath));
 }));
 
 app.get("/burtgel", asyncRoute((req, res) => {
-  if (req.session.user) return res.redirect("/zahialguud");
+  if (req.session.user) return res.redirect("/profile");
   return renderPage(res, "auth", {
     page: "login",
     title: "Бүртгүүлэх — Нарлаг",
@@ -229,7 +233,7 @@ app.post("/burtgel", asyncRoute(async (req, res) => {
 
   const user = await db.createCustomer({ name, phone, email, password });
   req.session.user = user;
-  req.session.save(() => res.redirect(nextPath));
+  req.session.save(() => res.redirect(nextPath === "/" ? "/profile" : nextPath));
 }));
 
 app.post("/garah", (req, res) => {
@@ -238,6 +242,51 @@ app.post("/garah", (req, res) => {
     res.redirect("/");
   });
 });
+
+app.get("/profile", requireLogin, asyncRoute((req, res) => renderPage(res, "profile", {
+  page: "profile",
+  title: "Профайл — Нарлаг",
+  notice: req.query.ok === "profile" ? "Нэр, утас шинэчлэгдлээ." : req.query.ok === "password" ? "Нууц үг солигдлоо." : "",
+  passwordError: ""
+})));
+
+app.post("/profile", requireLogin, asyncRoute(async (req, res) => {
+  const name = String(req.body.name || "").replace(/\s+/g, " ").trim().slice(0, 80);
+  const phone = String(req.body.phone || "").replace(/\D/g, "").slice(-8);
+  const again = (error) => renderPage(res.status(422), "profile", {
+    page: "profile",
+    title: "Профайл — Нарлаг",
+    notice: "",
+    passwordError: "",
+    error,
+    draft: { name, phone }
+  });
+  if (name.length < 2) return again("Нэрээ бүтнээр нь бичнэ үү.");
+  if (phone.length !== 8) return again("Утасны дугаар 8 оронтой байна.");
+  const user = await db.updateProfile(req.session.user.id, { name, phone });
+  if (!user) return res.redirect("/garah");
+  req.session.user = user;
+  req.session.save(() => res.redirect("/profile?ok=profile"));
+}));
+
+app.post("/profile/nuuts", requireLogin, asyncRoute(async (req, res) => {
+  const current = String(req.body.current || "");
+  const password = String(req.body.password || "");
+  const again = String(req.body.again || "");
+  const row = await db.findUserByEmail(req.session.user.email);
+  const fail = (passwordError) => renderPage(res.status(422), "profile", {
+    page: "profile",
+    title: "Профайл — Нарлаг",
+    notice: "",
+    error: "",
+    passwordError
+  });
+  if (!row || !(await bcrypt.compare(current, row.password_hash))) return fail("Одоогийн нууц үг буруу байна.");
+  if (password.length < 8) return fail("Шинэ нууц үг хамгийн багадаа 8 тэмдэгт байна.");
+  if (password !== again) return fail("Шинэ нууц үг хоёр талбар дээр адилхан биш байна.");
+  await db.updatePassword(row.id, password);
+  res.redirect("/profile?ok=password");
+}));
 
 app.get("/zahialguud", requireLogin, asyncRoute(async (req, res) => {
   return renderPage(res, "orders", {

@@ -1,0 +1,40 @@
+<%- include("partials/header") %>
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow">Профайл</p>
+    <h1><%= (draft && draft.name) || user.name %></h1>
+    <p><%= user.role === "admin" ? "Админ" : "Захиалагч" %> · <%= user.email %></p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap profile-grid">
+    <form class="form-card" method="post" action="/profile">
+      <% if (notice) { %><div class="form-ok"><%= notice %></div><% } %>
+      <% if (error) { %><div class="form-error"><%= error %></div><% } %>
+      <label class="field">Нэр
+        <input name="name" autocomplete="name" maxlength="80" required value="<%= (draft && draft.name) || user.name %>">
+      </label>
+      <label class="field">Утас
+        <input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" required value="<%= (draft && draft.phone) || user.phone %>">
+      </label>
+      <label class="field">Имэйл
+        <input type="email" value="<%= user.email %>" disabled>
+      </label>
+      <button class="btn btn--sun" type="submit">Хадгалах</button>
+    </form>
+    <form class="form-card" method="post" action="/profile/nuuts">
+      <% if (passwordError) { %><div class="form-error"><%= passwordError %></div><% } %>
+      <label class="field">Одоогийн нууц үг
+        <input name="current" type="password" autocomplete="current-password" required>
+      </label>
+      <label class="field">Шинэ нууц үг
+        <input name="password" type="password" autocomplete="new-password" minlength="8" required>
+      </label>
+      <label class="field">Шинэ нууц үг дахин
+        <input name="again" type="password" autocomplete="new-password" minlength="8" required>
+      </label>
+      <button class="btn btn--leaf" type="submit">Нууц үг солих</button>
+    </form>
+  </div>
+</section>
+<%- include("partials/footer") %>

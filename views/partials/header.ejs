@@ -45,14 +45,24 @@
     </nav>
     <div class="nav__actions">
       <a class="nav__phone" href="tel:+97699112244">9911-2244</a>
-      <% if (user) { %>
-        <a class="nav__user" href="<%= user.role === 'admin' ? '/admin' : '/zahialguud' %>"><%= user.name %></a>
-        <form class="nav-logout" action="/garah" method="post">
-          <button type="submit">Гарах</button>
-        </form>
-      <% } else { %>
-        <a class="nav__user" href="/nevtreh">Нэвтрэх</a>
-      <% } %>
+      <div class="account" data-account>
+        <button class="account__btn" type="button" data-account-btn aria-expanded="false" aria-haspopup="true">
+          <%= user ? user.name : "Профайл" %>
+        </button>
+        <div class="account__menu">
+          <% if (user) { %>
+            <a href="/profile">Профайл</a>
+            <a href="/zahialguud">Миний захиалга</a>
+            <% if (user.role === "admin") { %><a href="/admin">Админ</a><% } %>
+            <form action="/garah" method="post">
+              <button type="submit">Гарах</button>
+            </form>
+          <% } else { %>
+            <a href="/nevtreh">Нэвтрэх</a>
+            <a href="/burtgel">Бүртгүүлэх</a>
+          <% } %>
+        </div>
+      </div>
       <button class="basket-btn" type="button" data-open-basket>
         Сагс <strong data-basket-count hidden>0</strong>
       </button>

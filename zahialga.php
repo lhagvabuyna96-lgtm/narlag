@@ -20,10 +20,10 @@ require __DIR__ . "/partials/header.php";
         <legend>Холбоо</legend>
         <div class="fields">
           <label class="field">Нэр
-            <input name="name" autocomplete="name" maxlength="80" required>
+            <input name="name" autocomplete="name" maxlength="80" required value="<?= htmlspecialchars((string) ($narlagUser["name"] ?? ""), ENT_QUOTES, "UTF-8") ?>">
           </label>
           <label class="field">Утас
-            <input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="99112244" maxlength="20" required>
+            <input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="99112244" maxlength="20" required value="<?= htmlspecialchars((string) ($narlagUser["phone"] ?? ""), ENT_QUOTES, "UTF-8") ?>">
           </label>
         </div>
       </fieldset>

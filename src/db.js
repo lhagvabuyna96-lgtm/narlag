@@ -163,6 +163,20 @@ async function findUserByEmail(email) {
   return result.rows[0] || null;
 }
 
+async function updateProfile(id, { name, phone }) {
+  const result = await pool.query(
+    `UPDATE users SET name = $2, phone = $3 WHERE id = $1
+     RETURNING id, name, phone, email, role`,
+    [id, name, phone]
+  );
+  return result.rows[0] ? publicUser(result.rows[0]) : null;
+}
+
+async function updatePassword(id, password) {
+  const passwordHash = await bcrypt.hash(password, 10);
+  await pool.query("UPDATE users SET password_hash = $2 WHERE id = $1", [id, passwordHash]);
+}
+
 async function createCustomer({ name, phone, email, password }) {
   const passwordHash = await bcrypt.hash(password, 10);
   const result = await pool.query(
@@ -221,6 +235,8 @@ module.exports = {
   listTools,
   toolsById,
   findUserByEmail,
+  updateProfile,
+  updatePassword,
   createCustomer,
   publicUser,
   insertOrder,

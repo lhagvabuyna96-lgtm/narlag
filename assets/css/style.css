@@ -132,6 +132,14 @@ a { color: var(--moss); }
   min-height: 76px;
 }
 
+.hero__grid > *,
+.feature > *,
+.cta__box > *,
+.order__grid > *,
+.estimate > * {
+  min-width: 0;
+}
+
 .logo {
   display: flex;
   align-items: center;
@@ -821,21 +829,61 @@ legend { font-family: var(--serif); font-size: 1.8rem; margin-bottom: 10px; }
 }
 .site-foot h2 { color: var(--cream); font-size: 2rem; margin-bottom: 8px; }
 .site-foot .logo { margin-bottom: 10px; }
-.nav__user {
+.account { position: relative; }
+.account__btn {
+  background: transparent;
   color: var(--cream);
-  text-decoration: none;
+  border: 1.5px solid rgba(246, 240, 228, 0.35);
+  border-radius: 999px;
+  padding: 8px 14px;
   font-weight: 700;
-  font-size: 0.9rem;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.nav-logout { margin: 0; }
-.nav-logout button {
+.account__menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  min-width: 210px;
+  padding: 8px;
+  background: var(--paper);
+  border-radius: 16px;
+  box-shadow: 0 18px 40px rgba(20, 30, 16, 0.18);
+  z-index: 50;
+}
+.account.is-open .account__menu { display: grid; }
+.account__menu a,
+.account__menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  text-decoration: none;
+  color: var(--ink);
   background: transparent;
   border: 0;
-  color: var(--cream);
+  border-radius: 10px;
+  padding: 10px 12px;
   font-weight: 700;
-  padding: 0;
 }
-.nav-logout button:hover { color: var(--gold-2); }
+.account__menu a:hover,
+.account__menu button:hover { background: var(--sand); }
+.account__menu form { margin: 0; }
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  align-items: start;
+}
+.form-ok {
+  background: #e5f4df;
+  color: #14532d;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
 
 .table-wrap { overflow-x: auto; }
 .sheet {
@@ -973,19 +1021,33 @@ legend { font-family: var(--serif); font-size: 1.8rem; margin-bottom: 10px; }
 .toast.is-on { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 @media (max-width: 980px) {
-  .hero__grid, .feature, .feature--flip, .estimate, .price-grid, .order__grid, .cta__box, .foot__grid {
+  .hero__grid, .feature, .feature--flip, .estimate, .price-grid, .order__grid, .cta__box, .foot__grid, .profile-grid {
     grid-template-columns: 1fr;
   }
   .feature--flip .feature__photo { order: -1; }
   .stats__grid, .steps, .rules, .actions, .actions--2 { grid-template-columns: 1fr 1fr; }
   .summary-card { position: static; }
-  .hero__card { left: 12px; }
+  .hero__card { left: 12px; bottom: 18px; }
+  .cta__box img { height: 210px; }
+  .cta__copy { padding: 24px; }
 }
 
 @media (max-width: 920px) {
-  .nav-toggle { display: inline-flex; }
+  .nav__bar { gap: 8px; min-height: 64px; }
+  .logo { min-width: 0; }
+  .logo small { display: none; }
+  .logo strong { font-size: 1.45rem; }
+  .nav-toggle { display: inline-flex; flex: none; margin-left: auto; }
   .nav__phone { display: none; }
+  .nav__actions { gap: 6px; flex: none; }
+  .account__btn, .basket-btn {
+    flex: none;
+    max-width: 92px;
+    padding: 8px 10px;
+    font-size: 0.82rem;
+  }
   .nav__links {
+    z-index: 40;
     display: none;
     position: absolute;
     top: calc(100% + 8px);
@@ -1006,9 +1068,27 @@ legend { font-family: var(--serif); font-size: 1.8rem; margin-bottom: 10px; }
 
 @media (max-width: 640px) {
   .stats__grid, .steps, .rules, .fields, .actions, .actions--2 { grid-template-columns: 1fr; }
-  .hero { padding-top: 8px; }
-  .section { padding: 60px 0; }
+  .hero { padding: 8px 0 64px; }
+  .hero__sun { width: 180px; height: 180px; right: -70px; top: -70px; }
+  .hero h1 em { text-shadow: 0 2px 12px rgba(16, 38, 28, 0.55); }
+  .hero__card { width: min(280px, 88%); }
+  .hero h1, .page-hero h1, .section-head h2, .cta__copy h2 {
+    font-size: clamp(1.9rem, 8.6vw, 2.4rem);
+    overflow-wrap: anywhere;
+    padding-right: 0.2em;
+  }
+  .hero__lead, .page-hero p, .lede { font-size: 1rem; }
+  .hero__frame { aspect-ratio: 5 / 4; border-radius: 96px 96px 22px 22px; }
+  .hero__actions .btn, .form-card .btn, .estimate__result .btn { width: 100%; }
+  .section { padding: 48px 0; }
+  .page-hero .wrap, .estimate__fields, .estimate__result, .form-card, .summary-card { padding: 18px; }
+  .banner { min-height: 220px; }
+  .banner blockquote { font-size: 1.85rem; max-width: 12em; }
   .tool__actions { flex-direction: column; }
+  .field input, .field select, .field textarea, .estimate input { font-size: 16px; }
+  .account__menu { max-width: min(240px, calc(100vw - 24px)); }
+  .sheet { font-size: 0.86rem; }
+  .sheet th, .sheet td { padding: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -5,6 +5,7 @@ header("Content-Type: application/json; charset=utf-8");
 date_default_timezone_set("Asia/Ulaanbaatar");
 
 require_once dirname(__DIR__) . "/includes/prices.php";
+require_once dirname(__DIR__) . "/includes/auth.php";
 
 function fail(int $code, string $message): void
 {
@@ -179,6 +180,10 @@ $order = [
     "deposit" => $deposit,
     "total" => $total,
 ];
+$signedIn = narlag_user();
+if ($signedIn) {
+    $order["user_id"] = (int) $signedIn["id"];
+}
 
 $file = dirname(__DIR__) . "/data/orders.json";
 $dir = dirname($file);

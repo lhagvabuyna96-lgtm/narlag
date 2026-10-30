@@ -1,0 +1,51 @@
+<%- include("partials/header") %>
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow">Захиалга</p>
+    <h1>Миний захиалга</h1>
+    <p>Таны илгээсэн захиалга. Төлөвийг админ баталгаажуулна.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <% if (!orders.length) { %>
+      <p class="lede">Одоогоор захиалга алга. <a href="/zahialga">Шинэ захиалга өгөх</a>.</p>
+    <% } else { %>
+      <div class="table-wrap">
+        <table class="sheet">
+          <thead>
+            <tr>
+              <th>Дугаар</th>
+              <th>Өдөр</th>
+              <th>Газар</th>
+              <th>Ажил</th>
+              <th>Дүн</th>
+              <th>Төлөв</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(function (order) { %>
+              <tr>
+                <td><%= order.id %><br><small><%= when(order.created_at) %></small></td>
+                <td><%= day(order.visit_date) %><br><%= order.time_window %></td>
+                <td><%= order.area %><br><%= order.place %></td>
+                <td>
+                  <% if (order.lawn_m2) { %>Зүлэг <%= order.lawn_m2 %> м²<br><% } %>
+                  <% if (order.tree_small || order.tree_mid || order.tree_large) { %>
+                    Мод <%= order.tree_small %>/<%= order.tree_mid %>/<%= order.tree_large %><br>
+                  <% } %>
+                  <% itemsOf(order).forEach(function (item) { %>
+                    <%= item.mode === "rent" ? "Түрээс" : "Авах" %> · <%= item.name %> × <%= item.qty %><br>
+                  <% }) %>
+                </td>
+                <td><%= money(order.total) %><% if (order.deposit) { %><br><small>Барьцаа <%= money(order.deposit) %></small><% } %></td>
+                <td><span class="badge"><%= order.status %></span></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</section>
+<%- include("partials/footer") %>

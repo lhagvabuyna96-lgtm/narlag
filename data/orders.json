@@ -1,0 +1,42 @@
+[
+    {
+        "id": "NS-261030-064634-58",
+        "created": "2026-10-30T06:46:34+08:00",
+        "name": "БУЯНТОГТОХ",
+        "phone": "54625165",
+        "area": "Гачуурт",
+        "place": "hdth",
+        "date": "2026-10-31",
+        "time": "Аль ч цаг",
+        "lawn_m2": 0,
+        "trees": {
+            "small": 0,
+            "mid": 0,
+            "large": 0
+        },
+        "edge": true,
+        "rent_days": 1,
+        "delivery": true,
+        "note": "",
+        "items": [
+            {
+                "id": "mower-gas",
+                "name": "Бензин зүлэг хадагч",
+                "mode": "rent",
+                "qty": 1
+            },
+            {
+                "id": "chainsaw",
+                "name": "Моторт хөрөө",
+                "mode": "buy",
+                "qty": 1
+            }
+        ],
+        "service": 25000,
+        "rent": 35000,
+        "buy": 1280000,
+        "delivery_fee": 15000,
+        "deposit": 267000,
+        "total": 1355000
+    }
+]

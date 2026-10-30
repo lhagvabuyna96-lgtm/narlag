@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %></title>
+  <meta name="description" content="<%= desc %>">
+  <meta name="theme-color" content="#143526">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+<a class="skip" href="#content">Агуулга руу</a>
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="logo" href="/">
+      <svg class="logo__mark" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="30" fill="#f0b429"/>
+        <circle cx="32" cy="32" r="12" fill="#143526"/>
+        <g stroke="#143526" stroke-width="3" stroke-linecap="round">
+          <path d="M32 8v8M32 48v8M8 32h8M48 32h8"/>
+          <path d="M14 14l6 6M44 44l6 6M50 14l-6 6M20 44l-6 6"/>
+        </g>
+      </svg>
+      <span>
+        <strong>Нарлаг</strong>
+        <small>Зуслангийн үйлчилгээ</small>
+      </span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="sr-only">Цэс</span>
+      <i></i><i></i>
+    </button>
+    <nav id="site-nav" class="nav__links">
+      <a class="<%= page === 'home' ? 'is-active' : '' %>" href="/">Нүүр</a>
+      <a class="<%= page === 'lawn' ? 'is-active' : '' %>" href="/zuileg">Зүлэг</a>
+      <a class="<%= page === 'tree' ? 'is-active' : '' %>" href="/mod">Мод</a>
+      <a class="<%= page === 'rent' ? 'is-active' : '' %>" href="/tuurees">Түрээс</a>
+      <a class="<%= page === 'sale' ? 'is-active' : '' %>" href="/hudaldah">Худалдаа</a>
+      <a class="<%= page === 'price' ? 'is-active' : '' %>" href="/une">Үнэ</a>
+      <a class="<%= page === 'order' ? 'is-active' : '' %>" href="/zahialga">Захиалга</a>
+    </nav>
+    <div class="nav__actions">
+      <a class="nav__phone" href="tel:+97699112244">9911-2244</a>
+      <% if (user) { %>
+        <a class="nav__user" href="<%= user.role === 'admin' ? '/admin' : '/zahialguud' %>"><%= user.name %></a>
+        <form class="nav-logout" action="/garah" method="post">
+          <button type="submit">Гарах</button>
+        </form>
+      <% } else { %>
+        <a class="nav__user" href="/nevtreh">Нэвтрэх</a>
+      <% } %>
+      <button class="basket-btn" type="button" data-open-basket>
+        Сагс <strong data-basket-count hidden>0</strong>
+      </button>
+    </div>
+  </div>
+</header>
+<main id="content">

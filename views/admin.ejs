@@ -1,0 +1,71 @@
+<%- include("partials/header") %>
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow">Админ</p>
+    <h1>Бүх захиалга</h1>
+    <p>Төлөвийг шинэ, баталгаажсан, дууссан, цуцалсан болгож өөрчилнө.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <% if (!orders.length) { %>
+      <p class="lede">Захиалга алга.</p>
+    <% } else { %>
+      <div class="table-wrap">
+        <table class="sheet">
+          <thead>
+            <tr>
+              <th>Дугаар</th>
+              <th>Захиалагч</th>
+              <th>Газар</th>
+              <th>Ажил</th>
+              <th>Дүн</th>
+              <th>Төлөв</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(function (order) { %>
+              <tr>
+                <td><%= order.id %><br><small><%= when(order.created_at) %></small></td>
+                <td><%= order.customer_name %><br><%= order.phone %><% if (order.email) { %><br><%= order.email %><% } %></td>
+                <td><%= day(order.visit_date) %> · <%= order.time_window %><br><%= order.area %>, <%= order.place %></td>
+                <td>
+                  <% if (order.lawn_m2) { %>Зүлэг <%= order.lawn_m2 %> м²<br><% } %>
+                  <% if (order.tree_small || order.tree_mid || order.tree_large) { %>
+                    Мод <%= order.tree_small %>/<%= order.tree_mid %>/<%= order.tree_large %><br>
+                  <% } %>
+                  <% if (order.edge) { %>Ирмэг<br><% } %>
+                  <% itemsOf(order).forEach(function (item) { %>
+                    <%= item.mode === "rent" ? "Түрээс" : "Авах" %> · <%= item.name %> × <%= item.qty %><br>
+                  <% }) %>
+                  <% if (order.note) { %><small><%= order.note %></small><% } %>
+                </td>
+                <td>
+                  Үйлчилгээ <%= money(order.service) %><br>
+                  Түрээс <%= money(order.rent) %><br>
+                  Худалдаа <%= money(order.buy) %><br>
+                  Хүргэлт <%= money(order.delivery_fee) %><br>
+                  <strong><%= money(order.total) %></strong>
+                  <% if (order.deposit) { %><br><small>Барьцаа <%= money(order.deposit) %></small><% } %>
+                </td>
+                <td>
+                  <form method="post" action="/admin/zahialga/<%= encodeURIComponent(order.id) %>/tuluv">
+                    <label class="field">
+                      <select name="status">
+                        <% statuses.forEach(function (status) { %>
+                          <option value="<%= status %>" <%= status === order.status ? "selected" : "" %>><%= status %></option>
+                        <% }) %>
+                      </select>
+                    </label>
+                    <button class="btn btn--leaf" type="submit">Хадгалах</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</section>
+<%- include("partials/footer") %>

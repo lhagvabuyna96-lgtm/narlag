@@ -1,0 +1,19 @@
+{
+  "name": "narlag",
+  "private": true,
+  "description": "Нарлаг зуслангийн үйлчилгээ — Neon дээрх захиалга, админ ба хэрэглэгчийн нэвтрэлт",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "pg": "^8.13.1"
+  }
+}

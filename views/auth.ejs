@@ -1,0 +1,50 @@
+<%- include("partials/header") %>
+<section class="page-hero">
+  <div class="wrap">
+    <% if (mode === "register") { %>
+      <p class="eyebrow">Бүртгэл</p>
+      <h1>Хэрэглэгчээр бүртгүүлэх</h1>
+      <p>Бүртгэл нь захиалагчийн эрхтэй. Админ эрхийг сайтаас авахгүй.</p>
+    <% } else { %>
+      <p class="eyebrow">Нэвтрэх</p>
+      <h1>Нарлагт нэвтрэх</h1>
+      <p>Захиалагч өөрийн захиалгыг, админ бүх захиалгыг харна.</p>
+    <% } %>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap" style="max-width:520px">
+    <form class="form-card" method="post" action="<%= mode === 'register' ? '/burtgel' : '/nevtreh' %>">
+      <% if (error) { %><div class="form-error"><%= error %></div><% } %>
+      <input type="hidden" name="next" value="<%= nextPath %>">
+      <% if (mode === "register") { %>
+        <label class="field">Нэр
+          <input name="name" autocomplete="name" maxlength="80" required>
+        </label>
+        <label class="field">Утас
+          <input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="99112244" maxlength="20" required>
+        </label>
+      <% } %>
+      <label class="field">Имэйл
+        <input name="email" type="email" autocomplete="email" required>
+      </label>
+      <label class="field">Нууц үг
+        <input name="password" type="password" autocomplete="<%= mode === 'register' ? 'new-password' : 'current-password' %>" minlength="8" required>
+      </label>
+      <% if (mode === "register") { %>
+        <label class="field">Нууц үг дахин
+          <input name="again" type="password" autocomplete="new-password" minlength="8" required>
+        </label>
+      <% } %>
+      <button class="btn btn--sun" type="submit"><%= mode === "register" ? "Бүртгүүлэх" : "Нэвтрэх" %></button>
+      <p class="lede" style="margin-top:16px">
+        <% if (mode === "register") { %>
+          Бүртгэлтэй юу? <a href="/nevtreh?next=<%= encodeURIComponent(nextPath) %>">Нэвтрэх</a>
+        <% } else { %>
+          Шинэ захиалагч уу? <a href="/burtgel?next=<%= encodeURIComponent(nextPath) %>">Бүртгүүлэх</a>
+        <% } %>
+      </p>
+    </form>
+  </div>
+</section>
+<%- include("partials/footer") %>

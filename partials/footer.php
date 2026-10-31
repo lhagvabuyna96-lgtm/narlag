@@ -8,8 +8,8 @@
           <circle cx="32" cy="32" r="12" fill="#143526"/>
         </svg>
         <span>
-          <strong>Нарлаг</strong>
-          <small>Зуслангийн үйлчилгээ</small>
+          <strong>Зуслан зүлэг</strong>
+          <small>сервис</small>
         </span>
       </a>
       <p>Зуслангийн зүлэг тэгшлэх, мод засах, тэдгээрт хэрэглэх багажийг түрээслэх болон худалдах.</p>
@@ -31,7 +31,7 @@
     </div>
   </div>
 </footer>
-<div class="legal">© <span data-year>2026</span> Нарлаг. Зуслангийн зүлэг, мод, багаж.</div>
+<div class="legal">© <span data-year>2026</span> Зуслан зүлэг сервис. Зүлэг, мод, багаж.</div>
 
 <div class="drawer" id="basket" hidden>
   <div class="drawer__backdrop" data-close-basket></div>

@@ -1,6 +1,6 @@
 <?php
 $page = "order";
-$title = "Захиалга — Нарлаг";
+$title = "Захиалга — Зуслан зүлэг сервис";
 $desc = "Зуслангийн зүлэг, мод, багажны захиалга.";
 $scripts = ["assets/js/booking.js"];
 require __DIR__ . "/partials/header.php";
@@ -9,7 +9,7 @@ require __DIR__ . "/partials/header.php";
   <div class="wrap">
     <p class="eyebrow">Захиалга</p>
     <h1>Өдөр, газар, ажлаа үлдээнэ үү</h1>
-    <p>Тооцоо ойролцоо. Бид залгаж цаг, эцсийн үнийг баталгаажуулна. Тоо мэдэхгүй бол хоосон үлдээж үзлэг захиалж болно.</p>
+    <p>Хашааны м²-ээ оруулахад зүлгийн урьдчилсан дүн гарна. Энэ 100% эцсийн үнэ биш. Ажилчид очиж хэмжээд бодит үнийг хэлнэ.</p>
   </div>
 </section>
 <section class="order">
@@ -63,7 +63,7 @@ require __DIR__ . "/partials/header.php";
       <fieldset>
         <legend>Зүлэг, мод</legend>
         <div class="fields">
-          <label class="field">Зүлэг, м²
+          <label class="field">Хашааны хэмжээ, м²
             <input name="lawn" type="number" min="0" max="20000" value="0" inputmode="numeric">
           </label>
           <label class="field">Жижиг мод
@@ -101,7 +101,7 @@ require __DIR__ . "/partials/header.php";
     </form>
     <aside class="summary-card" id="summary-card">
       <p class="eyebrow">Дүн</p>
-      <h2>Ойролцоо үнэ</h2>
+      <h2>Урьдчилсан дүн</h2>
       <div id="summary"></div>
       <p class="grand"><span>Нийт</span><strong id="grand">0₮</strong></p>
       <p class="summary__note">Барьцаа нийт дүнд ороогүй. Багаж авахад төлнө, буцаахад буцаана.</p>

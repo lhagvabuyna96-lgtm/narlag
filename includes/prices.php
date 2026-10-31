@@ -1,8 +1,7 @@
 <?php
 
-const PRICE_LAWN_BASE = 80000;
-const PRICE_LAWN_MID = 700;
-const PRICE_LAWN_FAR = 500;
+const PRICE_LAWN_LOW = 300;
+const PRICE_LAWN_HIGH = 500;
 const PRICE_TREE_SMALL = 40000;
 const PRICE_TREE_MID = 80000;
 const PRICE_TREE_LARGE = 150000;
@@ -23,14 +22,15 @@ function price_lawn(int $m2): int
     if ($m2 <= 0) {
         return 0;
     }
-    $price = PRICE_LAWN_BASE;
-    if ($m2 > 100) {
-        $price += (min($m2, 300) - 100) * PRICE_LAWN_MID;
+    return $m2 * PRICE_LAWN_LOW;
+}
+
+function price_lawn_high(int $m2): int
+{
+    if ($m2 <= 0) {
+        return 0;
     }
-    if ($m2 > 300) {
-        $price += ($m2 - 300) * PRICE_LAWN_FAR;
-    }
-    return $price;
+    return $m2 * PRICE_LAWN_HIGH;
 }
 
 function price_trees(int $small, int $mid, int $large): int

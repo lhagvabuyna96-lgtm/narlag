@@ -1,6 +1,6 @@
 <?php
 $page = "rent";
-$title = "Багаж түрээс — Нарлаг";
+$title = "Багаж түрээс — Зуслан зүлэг сервис";
 $desc = "Зүлэг хадагч, триммер, хөрөө зэрэг багажийг өдрөөр түрээслэх.";
 require __DIR__ . "/includes/tools.php";
 require __DIR__ . "/partials/header.php";

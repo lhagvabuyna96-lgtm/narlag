@@ -23,8 +23,8 @@ if (is_file($file)) {
 }
 
 $page = "mine";
-$title = "Миний захиалга — Нарлаг";
-$desc = "Таны Нарлаг захиалгууд.";
+$title = "Миний захиалга — Зуслан зүлэг сервис";
+$desc = "Таны захиалгууд.";
 $narlagUser = $account;
 require __DIR__ . "/partials/header.php";
 ?>

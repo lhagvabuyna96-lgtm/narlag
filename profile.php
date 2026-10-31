@@ -72,8 +72,8 @@ if (($_GET["ok"] ?? "") === "password") {
 
 $narlagUser = narlag_user() ?: $account;
 $page = "profile";
-$title = "Профайл — Нарлаг";
-$desc = "Нарлаг бүртгэлийн мэдээлэл.";
+$title = "Профайл — Зуслан зүлэг сервис";
+$desc = "Бүртгэлийн мэдээлэл.";
 require __DIR__ . "/partials/header.php";
 ?>
 <section class="page-hero">

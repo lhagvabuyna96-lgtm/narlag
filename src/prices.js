@@ -10,11 +10,12 @@ function num(value) {
 
 function lawn(m2) {
   m2 = num(m2);
-  if (!m2) return 0;
-  let price = 80000;
-  if (m2 > 100) price += (Math.min(m2, 300) - 100) * 700;
-  if (m2 > 300) price += (m2 - 300) * 500;
-  return price;
+  return m2 * 300;
+}
+
+function lawnHigh(m2) {
+  m2 = num(m2);
+  return m2 * 500;
 }
 
 function trees(small, mid, large) {
@@ -25,4 +26,4 @@ function deposit(buyPrice, qty) {
   return Math.round((buyPrice || 0) * 0.3) * qty;
 }
 
-module.exports = { EDGE, DELIVERY, WEEK_FROM, WEEK_OFF, num, lawn, trees, deposit };
+module.exports = { EDGE, DELIVERY, WEEK_FROM, WEEK_OFF, num, lawn, lawnHigh, trees, deposit };

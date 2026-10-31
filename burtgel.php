@@ -60,8 +60,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 
 $page = "login";
-$title = "Бүртгүүлэх — Нарлаг";
-$desc = "Нарлагт захиалагчаар бүртгүүлэх.";
+$title = "Бүртгүүлэх — Зуслан зүлэг сервис";
+$desc = "Захиалагчаар бүртгүүлэх.";
 require __DIR__ . "/partials/header.php";
 ?>
 <section class="page-hero">

@@ -153,9 +153,10 @@ a { color: var(--moss); }
 .logo strong {
   display: block;
   font-family: var(--serif);
-  font-size: 1.8rem;
+  font-size: 1.28rem;
   font-weight: 600;
-  line-height: 0.9;
+  line-height: 1;
+  max-width: 8.2rem;
 }
 
 .logo small {
@@ -1035,8 +1036,8 @@ legend { font-family: var(--serif); font-size: 1.8rem; margin-bottom: 10px; }
 @media (max-width: 920px) {
   .nav__bar { gap: 8px; min-height: 64px; }
   .logo { min-width: 0; }
-  .logo small { display: none; }
-  .logo strong { font-size: 1.45rem; }
+  .logo strong { font-size: 1.02rem; max-width: 6.4rem; }
+  .logo small { font-size: 0.68rem; }
   .nav-toggle { display: inline-flex; flex: none; margin-left: auto; }
   .nav__phone { display: none; }
   .nav__actions { gap: 6px; flex: none; }

@@ -32,14 +32,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 
 $page = "login";
-$title = "Нэвтрэх — Нарлаг";
-$desc = "Нарлаг бүртгэлд нэвтрэх.";
+$title = "Нэвтрэх — Зуслан зүлэг сервис";
+$desc = "Бүртгэлд нэвтрэх.";
 require __DIR__ . "/partials/header.php";
 ?>
 <section class="page-hero">
   <div class="wrap">
     <p class="eyebrow">Нэвтрэх</p>
-    <h1>Нарлагт нэвтрэх</h1>
+    <h1>Нэвтрэх</h1>
     <p>Захиалагч өөрийн захиалгыг харна. Бүртгэлгүй бол шинээр нээнэ.</p>
   </div>
 </section>

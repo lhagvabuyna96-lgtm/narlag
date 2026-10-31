@@ -1,6 +1,6 @@
 <?php
 $page = "price";
-$title = "Үнэ — Нарлаг";
+$title = "Үнэ — Зуслан зүлэг сервис";
 $desc = "Зүлэг тэгшлэх, мод засах үйлчилгээний ойролцоо үнэ.";
 require __DIR__ . "/partials/header.php";
 ?>
@@ -8,7 +8,7 @@ require __DIR__ . "/partials/header.php";
   <div class="wrap">
     <p class="eyebrow">Үнэ</p>
     <h1>Ойролцоо дүнгээ энд харна</h1>
-    <p>100 м² хүртэл зүлэг нэг үнэтэй. Түүнээс өргөн талбай, өндөр мод дээр нэмэгдэнэ. Ирж үзээд эцсийн үнээ хэлнэ.</p>
+    <p>Хашааны хэмжээг м²-ээр оруулахад зүлгийн урьдчилсан дүн гарна. 1 м² нь 300–500₮. Ажилчид очиж хэмжээд бодит үнийг хэлнэ.</p>
   </div>
 </section>
 <section class="section">
@@ -16,7 +16,7 @@ require __DIR__ . "/partials/header.php";
     <form class="estimate" id="estimator">
       <div class="estimate__fields">
         <div class="fields">
-          <label class="field">Зүлэг, м²
+          <label class="field">Хашааны хэмжээ, м²
             <input type="number" name="lawn" min="0" max="20000" value="120" inputmode="numeric">
           </label>
           <label class="field">Жижиг мод, 3 м хүртэл
@@ -42,9 +42,9 @@ require __DIR__ . "/partials/header.php";
       <article class="price-card">
         <h3>Зүлэг</h3>
         <ul>
-          <li>100 м² хүртэл — 80,000₮</li>
-          <li>100–300 м² — нэмэлт м² тутамд 700₮</li>
-          <li>300 м²-ээс дээш — нэмэлт м² тутамд 500₮</li>
+          <li>1 м² — 300–500₮, урьдчилсан</li>
+          <li>Жишээ: 200 м² — 60,000–100,000₮</li>
+          <li>Эцсийн үнэ очиж хэмжсэний дараа</li>
           <li>Ирмэг засах — 25,000₮</li>
         </ul>
         <a class="btn btn--line" href="zuileg.php">Зүлэгний хуудас</a>
@@ -63,7 +63,7 @@ require __DIR__ . "/partials/header.php";
     <div class="faq" style="margin-top:36px">
       <div class="faq__item is-open">
         <h3><button type="button" aria-expanded="true">Үнэ яг ингэж гарах уу?<i aria-hidden="true"></i></button></h3>
-        <div class="faq__panel"><p>Тооцоолуур ойролцоо дүн гаргана. Налуу, чулуу, маш өндөр мод байвал ирж үзээд хэлнэ. Үнийг ажил эхлэхээс өмнө тохирно.</p></div>
+        <div class="faq__panel"><p>Зүлгийн дүн урьдчилсан. Ажилчид очиж, ажил эхлэхээс өмнө талбайг өөрсдөө хэмжиж бодит үнийг гаргана. Налуу, чулуу байвал үнэ өөрчлөгдөж болно.</p></div>
       </div>
       <div class="faq__item">
         <h3><button type="button" aria-expanded="false">Бороотой өдөр яах вэ?<i aria-hidden="true"></i></button></h3>

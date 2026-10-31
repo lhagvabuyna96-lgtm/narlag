@@ -89,7 +89,7 @@ function asyncRoute(fn) {
 async function renderPage(res, view, data = {}) {
   const tools = await db.listTools();
   res.render(view, {
-    title: "Нарлаг",
+    title: "Зуслан зүлэг сервис",
     desc: "Зуслангийн зүлэг тэгшлэх, мод засах, багаж түрээс ба худалдаа.",
     page: "",
     toolsHtml: "",
@@ -125,29 +125,29 @@ app.get("/health", (req, res) => res.json({ ok: true }));
 
 app.get("/", asyncRoute((req, res) => renderPage(res, "home", {
   page: "home",
-  title: "Нарлаг — Зуслангийн зүлэг, мод, багаж"
+  title: "Зуслан зүлэг сервис"
 })));
 
 app.get(["/zuileg", "/zuileg.php"], asyncRoute((req, res) => renderPage(res, "zuileg", {
   page: "lawn",
-  title: "Зүлэг тэгшлэх — Нарлаг"
+  title: "Зүлэг тэгшлэх — Зуслан зүлэг сервис"
 })));
 
 app.get(["/mod", "/mod.php"], asyncRoute((req, res) => renderPage(res, "mod", {
   page: "tree",
-  title: "Мод засах — Нарлаг"
+  title: "Мод засах — Зуслан зүлэг сервис"
 })));
 
 app.get(["/une", "/une.php"], asyncRoute((req, res) => renderPage(res, "une", {
   page: "price",
-  title: "Үнэ — Нарлаг"
+  title: "Үнэ — Зуслан зүлэг сервис"
 })));
 
 app.get(["/tuurees", "/tuurees.php", "/bagaj", "/bagaj.php"], asyncRoute(async (req, res) => {
   const tools = await db.listTools();
   return renderPage(res, "tools", {
     page: "rent",
-    title: "Багаж түрээс — Нарлаг",
+    title: "Багаж түрээс — Зуслан зүлэг сервис",
     offer: "rent",
     toolsHtml: catalog.renderTools(tools, "rent")
   });
@@ -157,7 +157,7 @@ app.get(["/hudaldah", "/hudaldah.php"], asyncRoute(async (req, res) => {
   const tools = await db.listTools();
   return renderPage(res, "tools", {
     page: "sale",
-    title: "Багаж худалдаа — Нарлаг",
+    title: "Багаж худалдаа — Зуслан зүлэг сервис",
     offer: "buy",
     toolsHtml: catalog.renderTools(tools, "buy")
   });
@@ -165,7 +165,7 @@ app.get(["/hudaldah", "/hudaldah.php"], asyncRoute(async (req, res) => {
 
 app.get(["/zahialga", "/zahialga.php"], asyncRoute((req, res) => renderPage(res, "order", {
   page: "order",
-  title: "Захиалга — Нарлаг",
+  title: "Захиалга — Зуслан зүлэг сервис",
   scripts: ["/assets/js/booking.js"]
 })));
 
@@ -173,7 +173,7 @@ app.get("/nevtreh", asyncRoute((req, res) => {
   if (req.session.user) return res.redirect(req.session.user.role === "admin" ? "/admin" : "/profile");
   return renderPage(res, "auth", {
     page: "login",
-    title: "Нэвтрэх — Нарлаг",
+    title: "Нэвтрэх — Зуслан зүлэг сервис",
     mode: "login",
     nextPath: safeNext(req.query.next)
   });
@@ -188,7 +188,7 @@ app.post("/nevtreh", asyncRoute(async (req, res) => {
   if (!matches) {
     return renderPage(res.status(401), "auth", {
       page: "login",
-      title: "Нэвтрэх — Нарлаг",
+      title: "Нэвтрэх — Зуслан зүлэг сервис",
       mode: "login",
       nextPath,
       error: "Имэйл эсвэл нууц үг буруу байна."
@@ -203,7 +203,7 @@ app.get("/burtgel", asyncRoute((req, res) => {
   if (req.session.user) return res.redirect("/profile");
   return renderPage(res, "auth", {
     page: "login",
-    title: "Бүртгүүлэх — Нарлаг",
+    title: "Бүртгүүлэх — Зуслан зүлэг сервис",
     mode: "register",
     nextPath: safeNext(req.query.next)
   });
@@ -218,7 +218,7 @@ app.post("/burtgel", asyncRoute(async (req, res) => {
   const nextPath = safeNext(req.body.next);
   const back = (status, error) => renderPage(res.status(status), "auth", {
     page: "login",
-    title: "Бүртгүүлэх — Нарлаг",
+    title: "Бүртгүүлэх — Зуслан зүлэг сервис",
     mode: "register",
     nextPath,
     error
@@ -245,7 +245,7 @@ app.post("/garah", (req, res) => {
 
 app.get("/profile", requireLogin, asyncRoute((req, res) => renderPage(res, "profile", {
   page: "profile",
-  title: "Профайл — Нарлаг",
+  title: "Профайл — Зуслан зүлэг сервис",
   notice: req.query.ok === "profile" ? "Нэр, утас шинэчлэгдлээ." : req.query.ok === "password" ? "Нууц үг солигдлоо." : "",
   passwordError: ""
 })));
@@ -255,7 +255,7 @@ app.post("/profile", requireLogin, asyncRoute(async (req, res) => {
   const phone = String(req.body.phone || "").replace(/\D/g, "").slice(-8);
   const again = (error) => renderPage(res.status(422), "profile", {
     page: "profile",
-    title: "Профайл — Нарлаг",
+    title: "Профайл — Зуслан зүлэг сервис",
     notice: "",
     passwordError: "",
     error,
@@ -276,7 +276,7 @@ app.post("/profile/nuuts", requireLogin, asyncRoute(async (req, res) => {
   const row = await db.findUserByEmail(req.session.user.email);
   const fail = (passwordError) => renderPage(res.status(422), "profile", {
     page: "profile",
-    title: "Профайл — Нарлаг",
+    title: "Профайл — Зуслан зүлэг сервис",
     notice: "",
     error: "",
     passwordError
@@ -291,7 +291,7 @@ app.post("/profile/nuuts", requireLogin, asyncRoute(async (req, res) => {
 app.get("/zahialguud", requireLogin, asyncRoute(async (req, res) => {
   return renderPage(res, "orders", {
     page: "mine",
-    title: "Миний захиалга — Нарлаг",
+    title: "Миний захиалга — Зуслан зүлэг сервис",
     orders: await db.listOrders(req.session.user.id)
   });
 }));
@@ -299,7 +299,7 @@ app.get("/zahialguud", requireLogin, asyncRoute(async (req, res) => {
 app.get("/admin", requireAdmin, asyncRoute(async (req, res) => {
   return renderPage(res, "admin", {
     page: "admin",
-    title: "Админ — Нарлаг",
+    title: "Админ — Зуслан зүлэг сервис",
     orders: await db.listOrders(null),
     statuses: orders.STATUSES
   });
@@ -335,7 +335,7 @@ app.use((req, res) => {
 
 app.use((err, req, res, next) => {
   if (err.status === 403) {
-    return renderPage(res.status(403), "forbidden", { title: "Хандах эрхгүй — Нарлаг", page: "admin" });
+    return renderPage(res.status(403), "forbidden", { title: "Хандах эрхгүй — Зуслан зүлэг сервис", page: "admin" });
   }
   console.error(err);
   if (req.path.startsWith("/api/")) {
@@ -347,7 +347,7 @@ app.use((err, req, res, next) => {
 
 db.init()
   .then(() => {
-    app.listen(port, () => console.log("Нарлаг сервер " + port + " порт дээр ажиллаж байна."));
+    app.listen(port, () => console.log("Сервер " + port + " порт дээр ажиллаж байна."));
   })
   .catch((error) => {
     console.error(error);

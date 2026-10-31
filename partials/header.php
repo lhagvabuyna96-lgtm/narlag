@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../includes/auth.php";
 $page = $page ?? "home";
-$title = $title ?? "Нарлаг";
+$title = $title ?? "Зуслан зүлэг сервис";
 $desc = $desc ?? "Зуслангийн зүлэг тэгшлэх, мод засах, багаж хэрэгсэл түрээслэх болон худалдах үйлчилгээ.";
 $narlagUser = $narlagUser ?? narlag_user();
 
@@ -38,8 +38,8 @@ function narlag_active(string $id, string $page): string
         </g>
       </svg>
       <span>
-        <strong>Нарлаг</strong>
-        <small>Зуслангийн үйлчилгээ</small>
+        <strong>Зуслан зүлэг</strong>
+        <small>сервис</small>
       </span>
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
@@ -65,6 +65,9 @@ function narlag_active(string $id, string $page): string
           <?php if ($narlagUser): ?>
             <a href="profile.php">Профайл</a>
             <a href="zahialguud.php">Миний захиалга</a>
+            <?php if (($narlagUser["role"] ?? "") === "admin"): ?>
+              <a href="admin.php">Админ</a>
+            <?php endif; ?>
             <form action="garah.php" method="post">
               <button type="submit">Гарах</button>
             </form>

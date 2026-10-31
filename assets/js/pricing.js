@@ -1,7 +1,6 @@
 (function () {
-  var BASE = 80000;
-  var MID = 700;
-  var FAR = 500;
+  var LAWN_LOW = 300;
+  var LAWN_HIGH = 500;
   var EDGE = 25000;
   var DELIVERY = 15000;
   var WEEK = 7;
@@ -19,12 +18,11 @@
   }
 
   function lawn(m2) {
-    m2 = num(m2);
-    if (!m2) return 0;
-    var price = BASE;
-    if (m2 > 100) price += (Math.min(m2, 300) - 100) * MID;
-    if (m2 > 300) price += (m2 - 300) * FAR;
-    return price;
+    return num(m2) * LAWN_LOW;
+  }
+
+  function lawnHigh(m2) {
+    return num(m2) * LAWN_HIGH;
   }
 
   function trees(small, mid, large) {
@@ -47,6 +45,7 @@
     num: num,
     format: format,
     lawn: lawn,
+    lawnHigh: lawnHigh,
     trees: trees,
     rent: rent,
     deposit: deposit

@@ -27,9 +27,10 @@
   function serviceBill() {
     var price = window.NarlagPrice;
     var lawn = price.lawn(form.elements.lawn.value);
+    var lawnHigh = price.lawnHigh(form.elements.lawn.value);
     var trees = price.trees(form.elements.small.value, form.elements.mid.value, form.elements.large.value);
     var edge = form.elements.edge.checked ? price.EDGE : 0;
-    return { lawn: lawn, trees: trees, edge: edge, sum: lawn + trees + edge };
+    return { lawn: lawn, lawnHigh: lawnHigh, trees: trees, edge: edge, sum: lawn + trees + edge, sumHigh: lawnHigh + trees + edge };
   }
 
   function row(label, value) {
@@ -45,7 +46,10 @@
     var delivery = form.elements.delivery.checked && tools.lines.length ? window.NarlagPrice.DELIVERY : 0;
     var html = "";
 
-    if (service.lawn) html += row("Зүлэг тэгшлэх", money(service.lawn));
+    if (service.lawn) {
+      html += row("Зүлэг, урьдчилсан", money(service.lawn) + " – " + money(service.lawnHigh));
+      html += '<p class="summary__note">1 м² нь 300–500₮. Энэ дүн эцсийн биш. Ажилчид очиж талбайг хэмжээд, ажил эхлэхээс өмнө бодит үнийг хэлнэ.</p>';
+    }
     if (service.trees) html += row("Мод засах", money(service.trees));
     if (service.edge) html += row("Ирмэг засах", money(service.edge));
     if (form.elements.large && window.NarlagPrice.num(form.elements.large.value) > 0) {
@@ -66,7 +70,11 @@
     if (tools.deposit) html += row("Барьцаа (буцаана)", money(tools.deposit));
 
     if (summary) summary.innerHTML = html;
-    if (grand) grand.textContent = money(service.sum + tools.sum + delivery);
+    if (grand) {
+      var low = service.sum + tools.sum + delivery;
+      var high = service.sumHigh + tools.sum + delivery;
+      grand.textContent = service.lawn ? money(low) + " – " + money(high) : money(low);
+    }
   }
 
   form.addEventListener("input", paint);
@@ -178,7 +186,13 @@
           var deposit = result.data.deposit
             ? " Барьцаа " + money(result.data.deposit) + ", багажийг бүтнээр буцаахад буцаана."
             : "";
-          text.textContent = "Захиалгын дугаар " + result.data.id + ". Нийт " + money(result.data.total) + "." + deposit + " Бид 9911-2244 дугаараас холбогдож цагийг баталгаажуулна.";
+          var shown = money(result.data.total);
+          var lawnM = window.NarlagPrice.num(form.elements.lawn.value);
+          if (lawnM > 0) {
+            var high = result.data.total - window.NarlagPrice.lawn(lawnM) + window.NarlagPrice.lawnHigh(lawnM);
+            shown = money(result.data.total) + " – " + money(high);
+          }
+          text.textContent = "Захиалгын дугаар " + result.data.id + ". Урьдчилсан дүн " + shown + "." + (lawnM > 0 ? " Бодит үнийг очиж хэмжсэний дараа хэлнэ." : "") + deposit + " Бид 9911-2244 дугаараас холбогдож цагийг баталгаажуулна.";
         }
         if (success) {
           success.hidden = false;

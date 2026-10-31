@@ -1,6 +1,6 @@
 <?php
 $page = "sale";
-$title = "Багаж худалдаа — Нарлаг";
+$title = "Багаж худалдаа — Зуслан зүлэг сервис";
 $desc = "Зүлэг хадагч, триммер, хөрөө болон цэцэрлэгийн багаж худалдаа.";
 require __DIR__ . "/includes/tools.php";
 require __DIR__ . "/partials/header.php";

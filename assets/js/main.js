@@ -79,6 +79,7 @@
     function paintEstimate() {
       var price = window.NarlagPrice;
       var lawn = price.lawn(estimator.elements.lawn.value);
+      var lawnHigh = price.lawnHigh(estimator.elements.lawn.value);
       var tree = price.trees(
         estimator.elements.small.value,
         estimator.elements.mid.value,
@@ -86,12 +87,16 @@
       );
       var edge = estimator.elements.edge.checked ? price.EDGE : 0;
       var rows = [];
-      if (lawn) rows.push("Зүлэг " + price.format(lawn));
+      if (lawn) rows.push("Зүлэг " + price.format(lawn) + " – " + price.format(lawnHigh));
       if (tree) rows.push("Мод " + price.format(tree));
       if (edge) rows.push("Ирмэг " + price.format(edge));
       if (!rows.length) rows.push("Тоо оруулаагүй байна");
       if (parts) parts.textContent = rows.join(" · ");
-      if (total) total.textContent = price.format(lawn + tree + edge);
+      if (total) {
+        var low = lawn + tree + edge;
+        var high = lawnHigh + tree + edge;
+        total.textContent = lawn ? price.format(low) + " – " + price.format(high) : price.format(low);
+      }
       if (link) {
         var query = new URLSearchParams();
         ["lawn", "small", "mid", "large"].forEach(function (name) {

@@ -53,7 +53,7 @@ async function buildOrder(body, user, toolsById) {
   const place = cleanLine(body.place, 160);
   const date = String(body.date || "").trim();
   let time = cleanLine(body.time, 40);
-  const note = cleanNote(body.note, 1000);
+  let note = cleanNote(body.note, 1000);
 
   if (name.length < 2) throw fail("Нэрээ бүтнээр нь бичнэ үү.");
   if (phone.length !== 8) throw fail("Утасны дугаар 8 оронтой байна.");
@@ -65,6 +65,10 @@ async function buildOrder(body, user, toolsById) {
   if (!TIMES.includes(time)) time = "Аль ч цаг";
 
   const lawn = Math.min(prices.num(body.lawn), 20000);
+  if (lawn > 0) {
+    const hint = "Урьдчилсан зүлэг " + lawn + " м²: " + prices.lawn(lawn) + "–" + prices.lawnHigh(lawn) + "₮. Бодит үнийг очиж хэмжсэний дараа тогтооно.";
+    note = note ? hint + "\n" + note : hint;
+  }
   const small = Math.min(prices.num(body.small), 100);
   const mid = Math.min(prices.num(body.mid), 100);
   const large = Math.min(prices.num(body.large), 100);

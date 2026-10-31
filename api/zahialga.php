@@ -153,6 +153,10 @@ foreach ($itemsIn as $item) {
 $rentDiscount = ($days >= PRICE_WEEK_FROM) ? (int) round($rentRaw * PRICE_WEEK_OFF) : 0;
 $rentTotal = $rentRaw - $rentDiscount;
 
+if ($lawn > 0) {
+    $hint = "Урьдчилсан зүлэг {$lawn} м²: " . price_lawn($lawn) . "–" . price_lawn_high($lawn) . "₮. Бодит үнийг очиж хэмжсэний дараа тогтооно.";
+    $note = $note === "" ? $hint : $hint . "\n" . $note;
+}
 $service = price_lawn($lawn) + price_trees($small, $mid, $large) + ($edge ? PRICE_EDGE : 0);
 $delivery = (!empty($data["delivery"]) && $hasTool) ? PRICE_DELIVERY : 0;
 $total = $service + $rentTotal + $buyTotal + $delivery;

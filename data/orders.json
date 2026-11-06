@@ -37,6 +37,7 @@
         "buy": 1280000,
         "delivery_fee": 15000,
         "deposit": 267000,
-        "total": 1355000
+        "total": 1355000,
+        "status": "дууссан"
     }
 ]

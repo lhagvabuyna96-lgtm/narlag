@@ -13,6 +13,17 @@ function narlag_active(string $id, string $page): string
 <!DOCTYPE html>
 <html lang="mn">
 <head>
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem("narlag-theme");
+        if (theme !== "dark" && theme !== "light") {
+          theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", theme);
+      } catch (error) {}
+    })();
+  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($title, ENT_QUOTES, "UTF-8") ?></title>
@@ -57,6 +68,9 @@ function narlag_active(string $id, string $page): string
     </nav>
     <div class="nav__actions">
       <a class="nav__phone" href="tel:+97699112244">9911-2244</a>
+      <button class="theme-btn" type="button" data-theme-toggle aria-pressed="false" title="Харанхуй горим">
+        <span class="sr-only">Горим солих</span>
+      </button>
       <div class="account" data-account>
         <button class="account__btn" type="button" data-account-btn aria-expanded="false" aria-haspopup="true">
           <?= $narlagUser ? htmlspecialchars((string) $narlagUser["name"], ENT_QUOTES, "UTF-8") : "Профайл" ?>

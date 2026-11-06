@@ -1,4 +1,29 @@
 (function () {
+  var themeBtn = document.querySelector("[data-theme-toggle]");
+  function currentTheme() {
+    return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  }
+  function paintTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    if (themeBtn) {
+      var dark = theme === "dark";
+      themeBtn.setAttribute("aria-pressed", dark ? "true" : "false");
+      themeBtn.title = dark ? "Гэрэлтэй горим" : "Харанхуй горим";
+    }
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", theme === "dark" ? "#101812" : "#143526");
+  }
+  paintTheme(currentTheme());
+  if (themeBtn) {
+    themeBtn.addEventListener("click", function () {
+      var next = currentTheme() === "dark" ? "light" : "dark";
+      try {
+        localStorage.setItem("narlag-theme", next);
+      } catch (error) {}
+      paintTheme(next);
+    });
+  }
+
   var toggle = document.querySelector(".nav-toggle");
   var nav = document.getElementById("site-nav");
   if (toggle && nav) {

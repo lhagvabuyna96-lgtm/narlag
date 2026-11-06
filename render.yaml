@@ -3,7 +3,7 @@ services:
     name: narlag
     runtime: node
     plan: free
-    region: singapore
+    region: ohio
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /health

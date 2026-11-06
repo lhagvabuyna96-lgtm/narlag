@@ -1,6 +1,4 @@
 const { STATUSES } = require("./orders");
-const ExcelJS = require("exceljs");
-const { Document, Packer, Paragraph, Table, TableRow, TableCell, TextRun, HeadingLevel, WidthType } = require("docx");
 
 function money(value) {
   return Math.round(Number(value) || 0).toLocaleString("en-US") + "₮";
@@ -91,6 +89,7 @@ function pairs(object) {
 }
 
 async function toExcel(report) {
+  const ExcelJS = require("exceljs");
   const book = new ExcelJS.Workbook();
   book.creator = "Зуслан зүлэг сервис";
   const summary = book.addWorksheet("Хураангуй");
@@ -126,31 +125,33 @@ function addSheet(book, name, headers, data) {
   sheet.columns.forEach((column) => { column.width = 22; });
 }
 
-function text(value, bold) {
-  return new Paragraph({
-    children: [new TextRun({ text: String(value ?? ""), bold: !!bold, font: "Calibri", size: bold ? 22 : 20 })]
-  });
-}
-
-function cell(value, bold) {
-  return new TableCell({
-    width: { size: 1200, type: WidthType.DXA },
-    children: [text(value, bold)]
-  });
-}
-
-function table(headers, data) {
-  const lines = data.length ? data : [headers.map(() => "—")];
-  return new Table({
-    width: { size: 9360, type: WidthType.DXA },
-    rows: [
-      new TableRow({ children: headers.map((header) => cell(header, true)), tableHeader: true }),
-      ...lines.map((line) => new TableRow({ children: line.map((value) => cell(value, false)) }))
-    ]
-  });
-}
-
 async function toWord(report) {
+  const { Document, Packer, Paragraph, Table, TableRow, TableCell, TextRun, HeadingLevel, WidthType } = await import("docx");
+
+  function text(value, bold) {
+    return new Paragraph({
+      children: [new TextRun({ text: String(value ?? ""), bold: !!bold, font: "Calibri", size: bold ? 22 : 20 })]
+    });
+  }
+
+  function cell(value, bold) {
+    return new TableCell({
+      width: { size: 1200, type: WidthType.DXA },
+      children: [text(value, bold)]
+    });
+  }
+
+  function table(headers, data) {
+    const lines = data.length ? data : [headers.map(() => "—")];
+    return new Table({
+      width: { size: 9360, type: WidthType.DXA },
+      rows: [
+        new TableRow({ children: headers.map((header) => cell(header, true)), tableHeader: true }),
+        ...lines.map((line) => new TableRow({ children: line.map((value) => cell(value, false)) }))
+      ]
+    });
+  }
+
   const doc = new Document({
     sections: [{
       children: [

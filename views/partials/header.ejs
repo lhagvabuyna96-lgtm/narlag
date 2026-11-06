@@ -74,7 +74,10 @@
             <% } else { %>
               <a href="/zahialguud">Миний захиалга</a>
             <% } %>
-            <% if (user.role === "admin") { %><a href="/admin">Админ</a><% } %>
+            <% if (user.role === "admin") { %>
+              <a href="/admin">Админ</a>
+              <a href="/admin/tailan">Тайлан</a>
+            <% } %>
             <form action="/garah" method="post">
               <button type="submit">Гарах</button>
             </form>

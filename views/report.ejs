@@ -1,0 +1,42 @@
+<%- include("partials/header") %>
+<section class="page-hero">
+  <div class="wrap">
+    <p class="eyebrow">Админ</p>
+    <h1>Тайлан</h1>
+    <p>Бүх захиалгын тоо, орлого, бүс, ажлын төрөл. Word эсвэл Excel-ээр татна.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <form class="report-download" method="post" action="/admin/tailan/tatakh">
+      <label class="field">Файл
+        <select name="format">
+          <option value="excel">Excel</option>
+          <option value="word">Word</option>
+        </select>
+      </label>
+      <button class="btn btn--sun" type="submit">Татах</button>
+    </form>
+
+    <div class="report-stats">
+      <article><p>Захиалга</p><strong><%= report.count %></strong></article>
+      <article><p>Нийт дүн</p><strong><%= money(report.totals.total) %></strong></article>
+      <article><p>Зүлэг</p><strong><%= report.totals.lawn %> м²</strong></article>
+      <article><p>Мод</p><strong><%= report.totals.trees %></strong></article>
+    </div>
+
+    <% if (!report.count) { %>
+      <p class="lede">Тайлан гаргах захиалга алга.</p>
+    <% } else { %>
+      <div class="report-charts">
+        <article class="chart-card"><h2>Төлөв</h2><canvas id="chart-status"></canvas></article>
+        <article class="chart-card"><h2>Орлого</h2><canvas id="chart-money"></canvas></article>
+        <article class="chart-card"><h2>Бүс</h2><canvas id="chart-area"></canvas></article>
+        <article class="chart-card"><h2>Ажлын төрөл</h2><canvas id="chart-work"></canvas></article>
+        <article class="chart-card chart-card--wide"><h2>Сараар</h2><canvas id="chart-month"></canvas></article>
+      </div>
+    <% } %>
+  </div>
+</section>
+<script id="report-data" type="application/json"><%- reportJson %></script>
+<%- include("partials/footer") %>

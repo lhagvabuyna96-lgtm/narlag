@@ -1130,6 +1130,37 @@ legend { font-family: var(--serif); font-size: 1.8rem; margin-bottom: 10px; }
 }
 .map-actions .muted { margin: 0; }
 
+.report-download {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 22px;
+}
+.report-download .field { min-width: 180px; }
+.report-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.report-stats article, .chart-card {
+  background: var(--paper);
+  border-radius: 22px;
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+.report-stats p { margin: 0; color: var(--muted); font-weight: 700; }
+.report-stats strong { display: block; margin-top: 6px; font-size: 1.6rem; }
+.report-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.chart-card h2 { margin: 0 0 12px; font-size: 1.4rem; }
+.chart-card--wide { grid-column: 1 / -1; }
+.chart-card canvas { width: 100% !important; max-height: 320px; }
+
 html[data-theme="dark"] .theme-btn::before {
   box-shadow: none;
   background: radial-gradient(circle at 35% 35%, #fff6d0, var(--gold) 55%, #c98412);
@@ -1210,7 +1241,7 @@ html[data-theme="dark"] .theme-btn::before {
 .form-card .serif { font-size: 2rem; margin-bottom: 12px; }
 
 @media (max-width: 980px) {
-  .admin-layout, .order-grid { grid-template-columns: 1fr; }
+  .admin-layout, .order-grid, .report-stats, .report-charts { grid-template-columns: 1fr; }
 }
 @media (max-width: 920px) {
   .theme-btn { width: 36px; height: 36px; }

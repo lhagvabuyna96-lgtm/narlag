@@ -2,8 +2,8 @@
 <section class="page-hero">
   <div class="wrap">
     <p class="eyebrow">Захиалга</p>
-    <h1>Миний захиалга</h1>
-    <p>Таны илгээсэн захиалга. Төлөвийг админ баталгаажуулна.</p>
+    <h1><%= all ? "Бүх захиалга" : "Миний захиалга" %></h1>
+    <p><%= all ? "Хэрэглэгчдийн илгээсэн бүх захиалга." : "Таны илгээсэн захиалга. Төлөвийг админ баталгаажуулна." %></p>
   </div>
 </section>
 <section class="section">
@@ -16,6 +16,7 @@
           <thead>
             <tr>
               <th>Дугаар</th>
+              <% if (all) { %><th>Захиалагч</th><% } %>
               <th>Өдөр</th>
               <th>Газар</th>
               <th>Ажил</th>
@@ -27,6 +28,7 @@
             <% orders.forEach(function (order) { %>
               <tr>
                 <td><%= order.id %><br><small><%= when(order.created_at) %></small></td>
+                <% if (all) { %><td><%= order.customer_name %><br><%= order.phone %></td><% } %>
                 <td><%= day(order.visit_date) %><br><%= order.time_window %></td>
                 <td><%= order.area %><br><%= order.place %>
                   <% if (order.lat != null && order.lng != null) { %><br><a href="https://www.google.com/maps?q=<%= order.lat %>,<%= order.lng %>" target="_blank" rel="noopener">Газрын зураг</a><% } %>

@@ -5,6 +5,7 @@ const express = require("express");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const db = require("./src/db");
+const reports = require("./src/reports");
 const PgSessionStore = require("./src/session-store");
 const orders = require("./src/orders");
 const catalog = require("./src/catalog");
@@ -100,6 +101,7 @@ async function renderPage(res, view, data = {}) {
     draft: null,
     nextPath: "/",
     orders: [],
+    all: false,
     offer: "",
     mapKey: "",
     ...data,
@@ -311,10 +313,12 @@ app.post("/profile/nuuts", requireLogin, asyncRoute(async (req, res) => {
 }));
 
 app.get("/zahialguud", requireLogin, asyncRoute(async (req, res) => {
+  const all = req.session.user.role === "admin";
   return renderPage(res, "orders", {
     page: "mine",
-    title: "Миний захиалга — Зуслан зүлэг сервис",
-    orders: await db.listOrders(req.session.user.id)
+    title: (all ? "Бүх захиалга" : "Миний захиалга") + " — Зуслан зүлэг сервис",
+    all,
+    orders: await db.listOrders(all ? null : req.session.user.id)
   });
 }));
 
@@ -359,6 +363,32 @@ function adminBack(res, code, kind) {
   if (code) query.set(kind, code);
   res.redirect("/admin?" + query.toString());
 }
+
+app.get("/admin/tailan", requireAdmin, asyncRoute(async (req, res) => {
+  const report = reports.buildReport(await db.listOrders(null));
+  return renderPage(res, "report", {
+    page: "admin",
+    title: "Тайлан — Зуслан зүлэг сервис",
+    report,
+    reportJson: JSON.stringify(report).replace(/</g, "\\u003c"),
+    scripts: [
+      "https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js",
+      "/assets/js/report.js"
+    ]
+  });
+}));
+
+app.post("/admin/tailan/tatakh", requireAdmin, asyncRoute(async (req, res) => {
+  const report = reports.buildReport(await db.listOrders(null));
+  const word = req.body.format === "word";
+  const buffer = word ? await reports.toWord(report) : await reports.toExcel(report);
+  const filename = "narlag-tailan-" + report.generatedAt + (word ? ".docx" : ".xlsx");
+  res.setHeader("Content-Type", word
+    ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+  res.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+  res.send(Buffer.from(buffer));
+}));
 
 app.get("/admin", requireAdmin, asyncRoute(async (req, res) => {
   const tab = req.query.tab === "orders" ? "orders" : "workers";

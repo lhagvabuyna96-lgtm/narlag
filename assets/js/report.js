@@ -18,6 +18,18 @@
     return Object.keys(object).map(function (key) { return object[key]; });
   }
 
+  new Chart(document.getElementById("chart-kind"), {
+    type: "doughnut",
+    data: {
+      labels: ["Захиалга", "Худалдаа", "Түрээс"],
+      datasets: [{
+        data: [report.groups.order, report.groups.buy, report.groups.rent],
+        backgroundColor: ["#14633a", "#f0b429", "#1c6b8a"]
+      }]
+    },
+    options: { plugins: { legend: { position: "bottom" } } }
+  });
+
   new Chart(document.getElementById("chart-status"), {
     type: "doughnut",
     data: {

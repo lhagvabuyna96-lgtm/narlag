@@ -25,11 +25,30 @@
       <article><p>Мод</p><strong><%= report.totals.trees %></strong></article>
     </div>
 
+    <h2 class="report-title">Төлөв</h2>
+    <div class="report-stats report-stats--3">
+      <article>
+        <p>Захиалга</p>
+        <strong><%= money(report.groups.order) %></strong>
+        <span>Зүлэг <%= report.totals.lawn %> м² · <%= money(report.groups.lawn) %></span>
+        <span>Мод <%= report.totals.trees %> · <%= money(report.groups.trees) %></span>
+      </article>
+      <article>
+        <p>Худалдаа</p>
+        <strong><%= money(report.groups.buy) %></strong>
+      </article>
+      <article>
+        <p>Түрээс</p>
+        <strong><%= money(report.groups.rent) %></strong>
+      </article>
+    </div>
+
     <% if (!report.count) { %>
       <p class="lede">Тайлан гаргах захиалга алга.</p>
     <% } else { %>
       <div class="report-charts">
-        <article class="chart-card"><h2>Төлөв</h2><canvas id="chart-status"></canvas></article>
+        <article class="chart-card"><h2>Төлөв</h2><canvas id="chart-kind"></canvas></article>
+        <article class="chart-card"><h2>Явц</h2><canvas id="chart-status"></canvas></article>
         <article class="chart-card"><h2>Орлого</h2><canvas id="chart-money"></canvas></article>
         <article class="chart-card"><h2>Бүс</h2><canvas id="chart-area"></canvas></article>
         <article class="chart-card"><h2>Ажлын төрөл</h2><canvas id="chart-work"></canvas></article>

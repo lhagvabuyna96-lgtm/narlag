@@ -140,6 +140,11 @@
                   </form>
                 </td>
               </tr>
+              <tr>
+                <td colspan="6">
+                  <%- include("partials/measure", { order: order, action: "/admin/zahialga/" + encodeURIComponent(order.id) + "/hemjilt" }) %>
+                </td>
+              </tr>
             <% }) %>
           </tbody>
         </table>

@@ -77,6 +77,14 @@ async function init() {
   await pool.query('CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON session (expire)');
   await pool.query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS lat DOUBLE PRECISION");
   await pool.query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS lng DOUBLE PRECISION");
+  await pool.query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS actual_lawn_m2 INTEGER");
+  await pool.query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS actual_tree_small INTEGER");
+  await pool.query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS actual_tree_mid INTEGER");
+  await pool.query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS actual_tree_large INTEGER");
+  await pool.query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS actual_lawn INTEGER");
+  await pool.query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS actual_trees INTEGER");
+  await pool.query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS actual_rent INTEGER");
+  await pool.query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS actual_buy INTEGER");
   await pool.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS job TEXT NOT NULL DEFAULT ''");
   await pool.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS active BOOLEAN NOT NULL DEFAULT true");
   await pool.query(`
@@ -276,8 +284,25 @@ async function updateOrderStatus(id, status) {
 }
 
 async function getOrder(id) {
-  const result = await pool.query("SELECT id, status FROM orders WHERE id = $1", [id]);
+  const result = await pool.query("SELECT * FROM orders WHERE id = $1", [id]);
   return result.rows[0] || null;
+}
+
+async function updateMeasurement(id, measure) {
+  const result = await pool.query(
+    `UPDATE orders SET
+      actual_lawn_m2 = $2, actual_tree_small = $3, actual_tree_mid = $4, actual_tree_large = $5,
+      actual_lawn = $6, actual_trees = $7, actual_rent = $8, actual_buy = $9,
+      service = $10, rent = $11, buy = $12, total = $13
+     WHERE id = $1 AND status <> 'цуцалсан'
+     RETURNING id`,
+    [
+      id, measure.lawnM2, measure.small, measure.mid, measure.large,
+      measure.lawnMoney, measure.treeMoney, measure.rent, measure.buy,
+      measure.service, measure.rent, measure.buy, measure.total
+    ]
+  );
+  return result.rowCount > 0;
 }
 
 async function listWorkers() {
@@ -355,6 +380,7 @@ module.exports = {
   listOrders,
   updateOrderStatus,
   getOrder,
+  updateMeasurement,
   listWorkers,
   createWorker,
   updateWorker,

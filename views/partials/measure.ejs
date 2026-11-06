@@ -1,0 +1,86 @@
+<% const fig = figures(order);
+   const rentItems = itemsOf(order).filter(function (item) { return item.mode === "rent"; });
+   const buyItems = itemsOf(order).filter(function (item) { return item.mode === "buy"; });
+   const locked = order.status === "цуцалсан"; %>
+<section class="measure">
+  <div class="measure__head">
+    <h3>Төлөв</h3>
+    <% if (fig.measured) { %><span class="pill pill--ok">бодит дүн орсон</span><% } %>
+  </div>
+  <% if (locked) { %>
+    <div class="measure-grid">
+      <div>
+        <h4>Захиалга</h4>
+        <p>Зүлэг <%= fig.lawnM2 %> м² · <%= money(fig.lawnMoney) %></p>
+        <p>Мод <%= fig.small %>/<%= fig.mid %>/<%= fig.large %> · <%= money(fig.treeMoney) %></p>
+      </div>
+      <div>
+        <h4>Түрээс</h4>
+        <p><%= money(fig.rent) %></p>
+      </div>
+      <div>
+        <h4>Худалдаа</h4>
+        <p><%= money(fig.buy) %></p>
+      </div>
+    </div>
+  <% } else { %>
+    <form method="post" action="<%= action %>">
+      <div class="measure-grid">
+        <div>
+          <h4>Захиалга</h4>
+          <p class="measure-label">Зүлэг</p>
+          <p class="muted">Захиалсан <%= fig.quoted.lawnM2 %> м² · <%= money(fig.quoted.lawnMoney) %></p>
+          <div class="fields">
+            <label class="field">Бодит м²
+              <input name="lawn_m2" inputmode="numeric" min="0" max="20000" required value="<%= fig.lawnM2 %>">
+            </label>
+            <label class="field">Бодит дүн, ₮
+              <input name="lawn_money" inputmode="numeric" min="0" required value="<%= fig.lawnMoney %>">
+            </label>
+          </div>
+          <p class="measure-label">Мод</p>
+          <p class="muted">Захиалсан <%= fig.quoted.small %>/<%= fig.quoted.mid %>/<%= fig.quoted.large %> · <%= money(fig.quoted.treeMoney) %></p>
+          <div class="fields fields--3">
+            <label class="field">Жижиг
+              <input name="tree_small" inputmode="numeric" min="0" max="100" required value="<%= fig.small %>">
+            </label>
+            <label class="field">Дунд
+              <input name="tree_mid" inputmode="numeric" min="0" max="100" required value="<%= fig.mid %>">
+            </label>
+            <label class="field">Том
+              <input name="tree_large" inputmode="numeric" min="0" max="100" required value="<%= fig.large %>">
+            </label>
+          </div>
+          <label class="field">Бодит дүн, ₮
+            <input name="tree_money" inputmode="numeric" min="0" required value="<%= fig.treeMoney %>">
+          </label>
+          <% if (fig.edgeMoney) { %><p class="muted">Ирмэг <%= money(fig.edgeMoney) %> захиалгын дүнд орно.</p><% } %>
+        </div>
+        <div>
+          <h4>Түрээс</h4>
+          <% if (!rentItems.length) { %><p class="muted">Түрээс алга.</p><% } %>
+          <% rentItems.forEach(function (item) { %>
+            <p><%= item.name %> × <%= item.qty %></p>
+          <% }) %>
+          <p class="muted">Захиалсан <%= money(fig.quoted.rent) %></p>
+          <label class="field">Бодит дүн, ₮
+            <input name="rent_money" inputmode="numeric" min="0" required value="<%= fig.rent %>">
+          </label>
+        </div>
+        <div>
+          <h4>Худалдаа</h4>
+          <% if (!buyItems.length) { %><p class="muted">Худалдаа алга.</p><% } %>
+          <% buyItems.forEach(function (item) { %>
+            <p><%= item.name %> × <%= item.qty %></p>
+          <% }) %>
+          <p class="muted">Захиалсан <%= money(fig.quoted.buy) %></p>
+          <label class="field">Бодит дүн, ₮
+            <input name="buy_money" inputmode="numeric" min="0" required value="<%= fig.buy %>">
+          </label>
+        </div>
+      </div>
+      <p class="measure-total">Бодит нийт <strong><%= money(fig.total) %></strong><% if (fig.delivery) { %> · хүргэлт <%= money(fig.delivery) %><% } %></p>
+      <button class="btn btn--leaf" type="submit">Бодит дүн хадгалах</button>
+    </form>
+  <% } %>
+</section>

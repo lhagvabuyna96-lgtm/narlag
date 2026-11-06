@@ -1144,6 +1144,9 @@ legend { font-family: var(--serif); font-size: 1.8rem; margin-bottom: 10px; }
   gap: 12px;
   margin-bottom: 22px;
 }
+.report-stats--3 { grid-template-columns: 1.4fr 1fr 1fr; }
+.report-title { margin: 0 0 12px; font-size: 1.6rem; }
+.report-stats span { display: block; margin-top: 4px; color: var(--muted); font-weight: 700; }
 .report-stats article, .chart-card {
   background: var(--paper);
   border-radius: 22px;
@@ -1240,8 +1243,21 @@ html[data-theme="dark"] .theme-btn::before {
 .pill--off { background: #f3d2c4; color: #6d2e16; }
 .form-card .serif { font-size: 2rem; margin-bottom: 12px; }
 
+.measure { margin-top: 12px; padding-top: 8px; }
+.measure__head { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.measure h3, .measure h4 { margin: 0 0 6px; }
+.measure h3 { font-size: 1rem; }
+.measure h4 { font-size: 0.95rem; }
+.measure-label { margin: 10px 0 0; font-weight: 800; }
+.measure-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 14px; align-items: start; }
+.measure-grid p { margin: 0 0 6px; }
+.measure .fields { margin-bottom: 8px; }
+.fields--3 { grid-template-columns: repeat(3, 1fr); }
+.measure-total { margin: 10px 0; }
+.sheet td .measure { min-width: 0; }
+
 @media (max-width: 980px) {
-  .admin-layout, .order-grid, .report-stats, .report-charts { grid-template-columns: 1fr; }
+  .admin-layout, .order-grid, .report-stats, .report-stats--3, .report-charts, .measure-grid, .fields--3 { grid-template-columns: 1fr; }
 }
 @media (max-width: 920px) {
   .theme-btn { width: 36px; height: 36px; }

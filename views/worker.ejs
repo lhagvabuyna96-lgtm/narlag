@@ -59,6 +59,7 @@
               </div>
             </div>
             <% if (order.note) { %><p class="muted"><%= order.note %></p><% } %>
+            <%- include("partials/measure", { order: order, action: "/ajil/zahialga/" + encodeURIComponent(order.id) + "/hemjilt" }) %>
             <% if (order.status !== "гүйцэтгэсэн" && order.status !== "цуцалсан") { %>
               <form method="post" action="/ajil/zahialga/<%= encodeURIComponent(order.id) %>/guitsesen">
                 <button class="btn btn--sun" type="submit">Гүйцэтгэсэн</button>

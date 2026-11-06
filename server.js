@@ -23,6 +23,7 @@ app.set("trust proxy", 1);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.locals.money = catalog.money;
+app.locals.figures = orders.figures;
 app.locals.when = (value) => value
   ? new Intl.DateTimeFormat("sv-SE", {
     timeZone: "Asia/Ulaanbaatar",
@@ -325,7 +326,8 @@ app.get("/zahialguud", requireLogin, asyncRoute(async (req, res) => {
 const ADMIN_OK = {
   created: "Ажилчин нэмэгдлээ. Тэр имэйл, нууц үгээрээ нэвтэрнэ.",
   saved: "Ажилчин хадгалагдлаа.",
-  deleted: "Ажилчин хасагдлаа."
+  deleted: "Ажилчин хасагдлаа.",
+  measured: "Бодит дүн хадгалагдлаа."
 };
 const ADMIN_ERR = {
   name: "Нэрийг бүтнээр нь бичнэ үү.",
@@ -336,7 +338,9 @@ const ADMIN_ERR = {
   again: "Нууц үг хоёр талбар дээр адилхан биш байна.",
   job: "Ажлын төрлийг сонгоно уу.",
   missing: "Ажилчин олдсонгүй.",
-  used: "Энэ ажилчин захиалгатай холбоотой тул идэвхгүй болгоно уу."
+  used: "Энэ ажилчин захиалгатай холбоотой тул идэвхгүй болгоно уу.",
+  measure: "Хэмжээ болон дүн 0 буюу түүнээс их бүхэл тоо байна.",
+  cancelled: "Цуцалсан захиалгыг засахгүй."
 };
 
 function workerInput(body, creating) {
@@ -439,11 +443,34 @@ app.get("/ajil", requireWorker, asyncRoute(async (req, res) => {
     page: "work",
     title: "Захиалга — Зуслан зүлэг сервис",
     orders: await db.listOrders(null),
-    notice: req.query.ok === "done" ? "Захиалгыг гүйцэтгэсэн болголоо." : "",
-    error: req.query.err === "cancelled" ? "Цуцалсан захиалгыг гүйцэтгэсэн болгохгүй." : "",
+    notice: req.query.ok === "done" ? "Захиалгыг гүйцэтгэсэн болголоо." : (req.query.ok === "measured" ? "Бодит дүн хадгалагдлаа." : ""),
+    error: req.query.err === "cancelled" ? "Цуцалсан захиалгыг засахгүй." : (req.query.err === "measure" ? "Хэмжээ болон дүн 0 буюу түүнээс их бүхэл тоо байна." : ""),
     scripts: ["/assets/js/map-view.js"],
     mapKey: process.env.MAPTILER_KEY || ""
   });
+}));
+
+async function saveMeasure(id, body) {
+  const order = await db.getOrder(id);
+  if (!order) return "missing";
+  if (order.status === "цуцалсан") return "cancelled";
+  const measure = orders.pricedMeasure(order, body);
+  if (measure.error) return measure.error;
+  const saved = await db.updateMeasurement(id, measure);
+  return saved ? "saved" : "cancelled";
+}
+
+app.post("/ajil/zahialga/:id/hemjilt", requireWorker, asyncRoute(async (req, res) => {
+  const result = await saveMeasure(req.params.id, req.body);
+  if (result === "saved") return res.redirect("/ajil?ok=measured");
+  return res.redirect("/ajil?err=" + (result === "measure" ? "measure" : "cancelled"));
+}));
+
+app.post("/admin/zahialga/:id/hemjilt", requireAdmin, asyncRoute(async (req, res) => {
+  const result = await saveMeasure(req.params.id, req.body);
+  if (result === "saved") return res.redirect("/admin?tab=orders&ok=measured");
+  const code = result === "measure" ? "measure" : "cancelled";
+  return res.redirect("/admin?tab=orders&err=" + code);
 }));
 
 app.post("/ajil/zahialga/:id/guitsesen", requireWorker, asyncRoute(async (req, res) => {

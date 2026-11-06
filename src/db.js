@@ -23,7 +23,9 @@ async function init() {
       phone TEXT NOT NULL,
       email TEXT NOT NULL UNIQUE,
       password_hash TEXT NOT NULL,
-      role TEXT NOT NULL CHECK (role IN ('admin', 'customer')),
+      role TEXT NOT NULL CHECK (role IN ('admin', 'customer', 'worker')),
+      job TEXT NOT NULL DEFAULT '',
+      active BOOLEAN NOT NULL DEFAULT true,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
 
@@ -73,6 +75,24 @@ async function init() {
     );
   `);
   await pool.query('CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON session (expire)');
+  await pool.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS job TEXT NOT NULL DEFAULT ''");
+  await pool.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS active BOOLEAN NOT NULL DEFAULT true");
+  await pool.query(`
+    DO $$
+    DECLARE constraint_name text;
+    BEGIN
+      FOR constraint_name IN
+        SELECT con.conname
+        FROM pg_constraint con
+        JOIN pg_class rel ON rel.oid = con.conrelid
+        WHERE rel.relname = 'users' AND con.contype = 'c'
+          AND pg_get_constraintdef(con.oid) ILIKE '%role%'
+      LOOP
+        EXECUTE format('ALTER TABLE users DROP CONSTRAINT %I', constraint_name);
+      END LOOP;
+    END $$
+  `);
+  await pool.query("ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('admin', 'customer', 'worker'))");
   await seedTools();
   await seedAdmin();
 }
@@ -159,13 +179,29 @@ async function toolsById() {
 }
 
 function publicUser(row) {
-  return { id: row.id, name: row.name, phone: row.phone, email: row.email, role: row.role };
+  return {
+    id: row.id,
+    name: row.name,
+    phone: row.phone,
+    email: row.email,
+    role: row.role,
+    job: row.job || "",
+    active: row.active !== false
+  };
 }
 
 async function findUserByEmail(email) {
   const result = await pool.query(
-    "SELECT id, name, phone, email, password_hash, role FROM users WHERE email = $1",
+    "SELECT id, name, phone, email, password_hash, role, job, active FROM users WHERE email = $1",
     [email]
+  );
+  return result.rows[0] || null;
+}
+
+async function findUserById(id) {
+  const result = await pool.query(
+    "SELECT id, name, phone, email, role, job, active FROM users WHERE id = $1",
+    [id]
   );
   return result.rows[0] || null;
 }
@@ -173,7 +209,7 @@ async function findUserByEmail(email) {
 async function updateProfile(id, { name, phone }) {
   const result = await pool.query(
     `UPDATE users SET name = $2, phone = $3 WHERE id = $1
-     RETURNING id, name, phone, email, role`,
+     RETURNING id, name, phone, email, role, job, active`,
     [id, name, phone]
   );
   return result.rows[0] ? publicUser(result.rows[0]) : null;
@@ -189,7 +225,7 @@ async function createCustomer({ name, phone, email, password }) {
   const result = await pool.query(
     `INSERT INTO users (name, phone, email, password_hash, role)
      VALUES ($1, $2, $3, $4, 'customer')
-     RETURNING id, name, phone, email, role`,
+     RETURNING id, name, phone, email, role, job, active`,
     [name, phone, email, passwordHash]
   );
   return publicUser(result.rows[0]);
@@ -236,17 +272,88 @@ async function updateOrderStatus(id, status) {
   return result.rowCount > 0;
 }
 
+async function getOrder(id) {
+  const result = await pool.query("SELECT id, status FROM orders WHERE id = $1", [id]);
+  return result.rows[0] || null;
+}
+
+async function listWorkers() {
+  const result = await pool.query(
+    `SELECT id, name, phone, email, job, active, created_at
+     FROM users WHERE role = 'worker'
+     ORDER BY active DESC, name`
+  );
+  return result.rows;
+}
+
+async function createWorker({ name, phone, email, password, job }) {
+  const passwordHash = await bcrypt.hash(password, 10);
+  try {
+    const result = await pool.query(
+      `INSERT INTO users (name, phone, email, password_hash, role, job, active)
+       VALUES ($1, $2, $3, $4, 'worker', $5, true)
+       RETURNING id`,
+      [name, phone, email, passwordHash, job]
+    );
+    return result.rows[0];
+  } catch (error) {
+    if (error.code === "23505") return null;
+    throw error;
+  }
+}
+
+async function updateWorker(id, { name, phone, email, job, active, password }) {
+  const values = [id, name, phone, email, job, active];
+  let passwordSql = "";
+  if (password) {
+    values.push(await bcrypt.hash(password, 10));
+    passwordSql = `, password_hash = $${values.length}`;
+  }
+  try {
+    const result = await pool.query(
+      `UPDATE users
+       SET name = $2, phone = $3, email = $4, job = $5, active = $6${passwordSql}
+       WHERE id = $1 AND role = 'worker'
+       RETURNING id`,
+      values
+    );
+    return result.rowCount > 0 ? "saved" : "missing";
+  } catch (error) {
+    if (error.code === "23505") return "taken";
+    throw error;
+  }
+}
+
+async function deleteWorker(id) {
+  try {
+    const result = await pool.query(
+      "DELETE FROM users WHERE id = $1 AND role = 'worker' RETURNING id",
+      [id]
+    );
+    return result.rowCount > 0 ? "deleted" : "missing";
+  } catch (error) {
+    if (error.code === "23503") return "used";
+    throw error;
+  }
+}
+
 module.exports = {
   pool,
   init,
   listTools,
   toolsById,
   findUserByEmail,
+  findUserById,
   updateProfile,
   updatePassword,
   createCustomer,
   publicUser,
   insertOrder,
   listOrders,
-  updateOrderStatus
+  updateOrderStatus,
+  getOrder,
+  listWorkers,
+  createWorker,
+  updateWorker,
+  deleteWorker
 };

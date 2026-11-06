@@ -2,7 +2,9 @@ const prices = require("./prices");
 
 const AREAS = ["Шадивлан", "Жаргалант", "Хандгайт", "Хуурай мухар", "Яргайт", "Гачуурт", "Налайх", "Тэрэлж", "Бусад"];
 const TIMES = ["Аль ч цаг", "Өглөө 08–12", "Өдөр 12–16", "Орой 16–19"];
-const STATUSES = ["шинэ", "баталгаажсан", "дууссан", "цуцалсан"];
+const DONE = "гүйцэтгэсэн";
+const STATUSES = ["шинэ", "баталгаажсан", "дууссан", DONE, "цуцалсан"];
+const JOBS = ["зүлэг", "мод", "жолооч", "ерөнхий"];
 
 function cleanLine(value, max) {
   return String(value || "").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, max);
@@ -134,4 +136,4 @@ async function buildOrder(body, user, toolsById) {
   };
 }
 
-module.exports = { AREAS, STATUSES, buildOrder };
+module.exports = { AREAS, STATUSES, DONE, JOBS, buildOrder };

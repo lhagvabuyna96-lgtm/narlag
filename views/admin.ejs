@@ -2,13 +2,90 @@
 <section class="page-hero">
   <div class="wrap">
     <p class="eyebrow">Админ</p>
-    <h1>Бүх захиалга</h1>
-    <p>Төлөвийг шинэ, баталгаажсан, дууссан, цуцалсан болгож өөрчилнө.</p>
+    <h1><%= tab === "orders" ? "Бүх захиалга" : "Ажилчид" %></h1>
+    <p><%= tab === "orders" ? "Захиалгын төлөвийг эндээс өөрчилнө." : "Ажилчин нэмнэ. Ажилчин нэвтэрч захиалгыг харж, дууссаныг гүйцэтгэсэн болгоно." %></p>
   </div>
 </section>
 <section class="section">
   <div class="wrap">
-    <% if (!orders.length) { %>
+    <nav class="admin-tabs" aria-label="Админ хэсэг">
+      <a class="<%= tab === 'workers' ? 'is-on' : '' %>" href="/admin">Ажилчид (<%= workers.length %>)</a>
+      <a class="<%= tab === 'orders' ? 'is-on' : '' %>" href="/admin?tab=orders">Захиалга</a>
+    </nav>
+    <% if (notice) { %><div class="form-ok"><%= notice %></div><% } %>
+    <% if (error) { %><div class="form-error"><%= error %></div><% } %>
+
+    <% if (tab === "workers") { %>
+      <div class="admin-layout">
+        <form class="form-card" method="post" action="/admin/ajilchin">
+          <h2 class="serif">Шинэ ажилчин</h2>
+          <label class="field">Нэр
+            <input name="name" maxlength="80" required>
+          </label>
+          <label class="field">Утас
+            <input name="phone" type="tel" inputmode="tel" maxlength="20" required>
+          </label>
+          <label class="field">Имэйл
+            <input name="email" type="email" autocomplete="off" required>
+          </label>
+          <label class="field">Ажил
+            <select name="job" required>
+              <% jobs.forEach(function (job) { %>
+                <option value="<%= job %>"><%= job %></option>
+              <% }) %>
+            </select>
+          </label>
+          <label class="field">Нууц үг
+            <input name="password" type="password" autocomplete="new-password" minlength="8" required>
+          </label>
+          <label class="field">Нууц үг дахин
+            <input name="again" type="password" autocomplete="new-password" minlength="8" required>
+          </label>
+          <button class="btn btn--sun" type="submit">Нэмэх</button>
+        </form>
+        <div class="order-list">
+          <% if (!workers.length) { %>
+            <p class="lede">Ажилчин алга. Зүүн талын маягтаар нэмнэ.</p>
+          <% } %>
+          <% workers.forEach(function (worker) { %>
+            <article class="order-card">
+              <form method="post" action="/admin/ajilchin/<%= worker.id %>">
+                <div class="order-card__top">
+                  <h2><%= worker.name %></h2>
+                  <span class="pill <%= worker.active ? 'pill--ok' : 'pill--off' %>"><%= worker.active ? "идэвхтэй" : "идэвхгүй" %></span>
+                </div>
+                <div class="fields">
+                  <label class="field">Нэр
+                    <input name="name" maxlength="80" required value="<%= worker.name %>">
+                  </label>
+                  <label class="field">Утас
+                    <input name="phone" type="tel" inputmode="tel" maxlength="20" required value="<%= worker.phone %>">
+                  </label>
+                  <label class="field">Имэйл
+                    <input name="email" type="email" required value="<%= worker.email %>">
+                  </label>
+                  <label class="field">Ажил
+                    <select name="job">
+                      <% jobs.forEach(function (job) { %>
+                        <option value="<%= job %>" <%= job === worker.job ? "selected" : "" %>><%= job %></option>
+                      <% }) %>
+                    </select>
+                  </label>
+                  <label class="field">Шинэ нууц үг
+                    <input name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Хэвээр үлдээх бол хоосон">
+                  </label>
+                </div>
+                <p><label><input type="checkbox" name="active" value="1" <%= worker.active ? "checked" : "" %>> Идэвхтэй</label></p>
+                <button class="btn btn--leaf" type="submit">Хадгалах</button>
+              </form>
+              <form method="post" action="/admin/ajilchin/<%= worker.id %>/ustgah" onsubmit="return confirm('Энэ ажилчныг хасах уу?');">
+                <button class="btn btn--ghost" type="submit">Хасах</button>
+              </form>
+            </article>
+          <% }) %>
+        </div>
+      </div>
+    <% } else if (!orders.length) { %>
       <p class="lede">Захиалга алга.</p>
     <% } else { %>
       <div class="table-wrap">

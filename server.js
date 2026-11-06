@@ -106,20 +106,40 @@ async function renderPage(res, view, data = {}) {
   });
 }
 
-function requireLogin(req, res, next) {
-  if (req.session.user) return next();
-  return res.redirect("/nevtreh?next=" + encodeURIComponent(req.originalUrl));
+function landingFor(role) {
+  if (role === "admin") return "/admin";
+  if (role === "worker") return "/ajil";
+  return "/profile";
 }
 
-function requireAdmin(req, res, next) {
+function requireLogin(req, res, next) {
   if (!req.session.user) return res.redirect("/nevtreh?next=" + encodeURIComponent(req.originalUrl));
-  if (req.session.user.role !== "admin") {
-    const error = new Error("forbidden");
-    error.status = 403;
-    return next(error);
-  }
-  return next();
+  db.findUserById(req.session.user.id).then((row) => {
+    if (!row || row.active === false) {
+      return req.session.destroy(() => res.redirect("/nevtreh"));
+    }
+    req.session.user = db.publicUser(row);
+    next();
+  }).catch(next);
 }
+
+function requireRole(role) {
+  return (req, res, next) => {
+    if (!req.session.user) return res.redirect("/nevtreh?next=" + encodeURIComponent(req.originalUrl));
+    db.findUserById(req.session.user.id).then((row) => {
+      if (!row || row.active === false || row.role !== role) {
+        const error = new Error("forbidden");
+        error.status = 403;
+        return next(error);
+      }
+      req.session.user = db.publicUser(row);
+      next();
+    }).catch(next);
+  };
+}
+
+const requireAdmin = requireRole("admin");
+const requireWorker = requireRole("worker");
 
 app.get("/health", (req, res) => res.json({ ok: true }));
 
@@ -170,7 +190,7 @@ app.get(["/zahialga", "/zahialga.php"], asyncRoute((req, res) => renderPage(res,
 })));
 
 app.get("/nevtreh", asyncRoute((req, res) => {
-  if (req.session.user) return res.redirect(req.session.user.role === "admin" ? "/admin" : "/profile");
+  if (req.session.user) return res.redirect(landingFor(req.session.user.role));
   return renderPage(res, "auth", {
     page: "login",
     title: "Нэвтрэх — Зуслан зүлэг сервис",
@@ -185,17 +205,17 @@ app.post("/nevtreh", asyncRoute(async (req, res) => {
   const nextPath = safeNext(req.body.next);
   const row = await db.findUserByEmail(email);
   const matches = row && await bcrypt.compare(password, row.password_hash);
-  if (!matches) {
+  if (!matches || row.active === false) {
     return renderPage(res.status(401), "auth", {
       page: "login",
       title: "Нэвтрэх — Зуслан зүлэг сервис",
       mode: "login",
       nextPath,
-      error: "Имэйл эсвэл нууц үг буруу байна."
+      error: matches && row.active === false ? "Энэ бүртгэл идэвхгүй байна." : "Имэйл эсвэл нууц үг буруу байна."
     });
   }
   req.session.user = db.publicUser(row);
-  const landing = row.role === "admin" ? "/admin" : "/profile";
+  const landing = landingFor(row.role);
   req.session.save(() => res.redirect(nextPath === "/" ? landing : nextPath));
 }));
 
@@ -296,20 +316,108 @@ app.get("/zahialguud", requireLogin, asyncRoute(async (req, res) => {
   });
 }));
 
+const ADMIN_OK = {
+  created: "Ажилчин нэмэгдлээ. Тэр имэйл, нууц үгээрээ нэвтэрнэ.",
+  saved: "Ажилчин хадгалагдлаа.",
+  deleted: "Ажилчин хасагдлаа."
+};
+const ADMIN_ERR = {
+  name: "Нэрийг бүтнээр нь бичнэ үү.",
+  phone: "Утасны дугаар 8 оронтой байна.",
+  email: "Имэйл хаягаа зөв бичнэ үү.",
+  taken: "Энэ имэйлээр бүртгэл байна.",
+  password: "Нууц үг хамгийн багадаа 8 тэмдэгт байна.",
+  again: "Нууц үг хоёр талбар дээр адилхан биш байна.",
+  job: "Ажлын төрлийг сонгоно уу.",
+  missing: "Ажилчин олдсонгүй.",
+  used: "Энэ ажилчин захиалгатай холбоотой тул идэвхгүй болгоно уу."
+};
+
+function workerInput(body, creating) {
+  const name = String(body.name || "").replace(/\s+/g, " ").trim().slice(0, 80);
+  const phone = String(body.phone || "").replace(/\D/g, "").slice(-8);
+  const email = String(body.email || "").trim().toLowerCase();
+  const job = String(body.job || "");
+  const password = String(body.password || "");
+  const again = String(body.again || "");
+  const active = body.active === "1" || body.active === "on";
+  if (name.length < 2) return { error: "name" };
+  if (phone.length !== 8) return { error: "phone" };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: "email" };
+  if (!orders.JOBS.includes(job)) return { error: "job" };
+  if (creating || password || again) {
+    if (password.length < 8) return { error: "password" };
+    if (creating && password !== again) return { error: "again" };
+  }
+  return { name, phone, email, job, password, active: creating ? true : active };
+}
+
+function adminBack(res, code, kind) {
+  const query = new URLSearchParams({ tab: "workers" });
+  if (code) query.set(kind, code);
+  res.redirect("/admin?" + query.toString());
+}
+
 app.get("/admin", requireAdmin, asyncRoute(async (req, res) => {
+  const tab = req.query.tab === "orders" ? "orders" : "workers";
   return renderPage(res, "admin", {
     page: "admin",
     title: "Админ — Зуслан зүлэг сервис",
-    orders: await db.listOrders(null),
-    statuses: orders.STATUSES
+    tab,
+    workers: await db.listWorkers(),
+    jobs: orders.JOBS,
+    orders: tab === "orders" ? await db.listOrders(null) : [],
+    statuses: orders.STATUSES,
+    notice: ADMIN_OK[req.query.ok] || "",
+    error: ADMIN_ERR[req.query.err] || ""
   });
+}));
+
+app.post("/admin/ajilchin", requireAdmin, asyncRoute(async (req, res) => {
+  const input = workerInput(req.body, true);
+  if (input.error) return adminBack(res, input.error, "err");
+  const created = await db.createWorker(input);
+  if (!created) return adminBack(res, "taken", "err");
+  adminBack(res, "created", "ok");
+}));
+
+app.post("/admin/ajilchin/:id", requireAdmin, asyncRoute(async (req, res) => {
+  const input = workerInput(req.body, false);
+  if (input.error) return adminBack(res, input.error, "err");
+  const result = await db.updateWorker(req.params.id, input);
+  if (result !== "saved") return adminBack(res, result, "err");
+  adminBack(res, "saved", "ok");
+}));
+
+app.post("/admin/ajilchin/:id/ustgah", requireAdmin, asyncRoute(async (req, res) => {
+  const result = await db.deleteWorker(req.params.id);
+  if (result !== "deleted") return adminBack(res, result, "err");
+  adminBack(res, "deleted", "ok");
 }));
 
 app.post("/admin/zahialga/:id/tuluv", requireAdmin, asyncRoute(async (req, res) => {
   const status = String(req.body.status || "");
-  if (!orders.STATUSES.includes(status)) return res.redirect("/admin");
+  if (!orders.STATUSES.includes(status)) return res.redirect("/admin?tab=orders");
   await db.updateOrderStatus(req.params.id, status);
-  res.redirect("/admin");
+  res.redirect("/admin?tab=orders");
+}));
+
+app.get("/ajil", requireWorker, asyncRoute(async (req, res) => {
+  return renderPage(res, "worker", {
+    page: "work",
+    title: "Захиалга — Зуслан зүлэг сервис",
+    orders: await db.listOrders(null),
+    notice: req.query.ok === "done" ? "Захиалгыг гүйцэтгэсэн болголоо." : "",
+    error: req.query.err === "cancelled" ? "Цуцалсан захиалгыг гүйцэтгэсэн болгохгүй." : ""
+  });
+}));
+
+app.post("/ajil/zahialga/:id/guitsesen", requireWorker, asyncRoute(async (req, res) => {
+  const order = await db.getOrder(req.params.id);
+  if (!order) return res.redirect("/ajil");
+  if (order.status === "цуцалсан") return res.redirect("/ajil?err=cancelled");
+  if (order.status !== orders.DONE) await db.updateOrderStatus(order.id, orders.DONE);
+  res.redirect("/ajil?ok=done");
 }));
 
 async function receiveOrder(req, res) {

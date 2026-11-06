@@ -3,7 +3,7 @@
   <div class="wrap">
     <p class="eyebrow">Профайл</p>
     <h1><%= (draft && draft.name) || user.name %></h1>
-    <p><%= user.role === "admin" ? "Админ" : "Захиалагч" %> · <%= user.email %></p>
+    <p><%= user.role === "admin" ? "Админ" : user.role === "worker" ? "Ажилчин" : "Захиалагч" %> · <%= user.email %></p>
   </div>
 </section>
 <section class="section">

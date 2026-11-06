@@ -122,14 +122,14 @@ async function toExcel(report) {
   summary.addRow(["Зүлэг, м²", report.totals.lawn]);
   summary.addRow(["Мод, ширхэг", report.totals.trees]);
   summary.addRow(["Pin-тэй захиалга", report.totals.pins]);
-  summary.addRow(["Төлөв · Захиалга", report.groups.order]);
-  summary.addRow(["Төлөв · Зүлэг", report.groups.lawn]);
-  summary.addRow(["Төлөв · Мод", report.groups.trees]);
-  summary.addRow(["Төлөв · Худалдаа", report.groups.buy]);
-  summary.addRow(["Төлөв · Түрээс", report.groups.rent]);
+  summary.addRow(["Төрөл · Захиалга", report.groups.order]);
+  summary.addRow(["Төрөл · Зүлэг", report.groups.lawn]);
+  summary.addRow(["Төрөл · Мод", report.groups.trees]);
+  summary.addRow(["Төрөл · Худалдаа", report.groups.buy]);
+  summary.addRow(["Төрөл · Түрээс", report.groups.rent]);
   summary.getRow(1).font = { bold: true };
 
-  addSheet(book, "Төлөв", ["Хэсэг", "Дүн"], [
+  addSheet(book, "Төрөл", ["Хэсэг", "Дүн"], [
     ["Захиалга", report.groups.order],
     ["Зүлэг", report.groups.lawn],
     ["Мод", report.groups.trees],
@@ -193,7 +193,7 @@ async function toWord(report) {
         text("Нийт захиалга: " + report.count + ". Нийт дүн: " + money(report.totals.total) + ".", false),
         text("Үйлчилгээ " + money(report.totals.service) + ", түрээс " + money(report.totals.rent) + ", худалдаа " + money(report.totals.buy) + ", хүргэлт " + money(report.totals.delivery) + ".", false),
         text("Зүлэг " + report.totals.lawn + " м², мод " + report.totals.trees + " ширхэг, pin-тэй захиалга " + report.totals.pins + ".", false),
-        new Paragraph({ heading: HeadingLevel.HEADING_2, children: [new TextRun("Төлөв")] }),
+        new Paragraph({ heading: HeadingLevel.HEADING_2, children: [new TextRun("Төрөл")] }),
         table(["Хэсэг", "Дүн"], [
           ["Захиалга", money(report.groups.order)],
           ["Зүлэг", money(report.groups.lawn)],

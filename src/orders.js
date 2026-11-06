@@ -222,6 +222,21 @@ function figures(order) {
   };
 }
 
+function kinds(order) {
+  const bill = figures(order);
+  const service = [];
+  if (bill.quoted.lawnM2 > 0 || bill.lawnM2 > 0) service.push("Зүлэг");
+  if ((bill.quoted.small + bill.quoted.mid + bill.quoted.large) > 0 || (bill.small + bill.mid + bill.large) > 0) {
+    service.push("Мод");
+  }
+  const names = [];
+  if (service.length || bill.edgeMoney) names.push(service.length ? "Захиалга (" + service.join(", ") + ")" : "Захиалга");
+  const items = Array.isArray(order.items) ? order.items : [];
+  if (bill.quoted.buy > 0 || bill.buy > 0 || items.some((item) => item && item.mode === "buy")) names.push("Худалдаа");
+  if (bill.quoted.rent > 0 || bill.rent > 0 || items.some((item) => item && item.mode === "rent")) names.push("Түрээс");
+  return names;
+}
+
 function pricedMeasure(order, body) {
   const input = readMeasure(body);
   if (input.error) return input;
@@ -237,4 +252,4 @@ function pricedMeasure(order, body) {
   };
 }
 
-module.exports = { AREAS, STATUSES, DONE, JOBS, buildOrder, figures, readMeasure, pricedMeasure };
+module.exports = { AREAS, STATUSES, DONE, JOBS, buildOrder, figures, kinds, readMeasure, pricedMeasure };

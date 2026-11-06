@@ -21,6 +21,7 @@
               <th>Газар</th>
               <th>Ажил</th>
               <th>Дүн</th>
+              <th>Төрөл</th>
               <th>Төлөв</th>
             </tr>
           </thead>
@@ -43,6 +44,13 @@
                   <% }) %>
                 </td>
                 <td><%= money(order.total) %><% if (order.deposit) { %><br><small>Барьцаа <%= money(order.deposit) %></small><% } %></td>
+                <td>
+                  <% const orderKinds = kinds(order); %>
+                  <% if (!orderKinds.length) { %>—<% } %>
+                  <% orderKinds.forEach(function (kind) { %>
+                    <span class="badge"><%= kind %></span>
+                  <% }) %>
+                </td>
                 <td><span class="badge"><%= order.status %></span></td>
               </tr>
             <% }) %>

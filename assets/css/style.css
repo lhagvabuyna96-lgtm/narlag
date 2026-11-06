@@ -913,6 +913,7 @@ legend { font-family: var(--serif); font-size: 1.8rem; margin-bottom: 10px; }
   background: var(--sand);
   font-weight: 800;
   font-size: 0.82rem;
+  margin: 0 4px 4px 0;
 }
 
 .legal {

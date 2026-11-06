@@ -24,6 +24,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.locals.money = catalog.money;
 app.locals.figures = orders.figures;
+app.locals.kinds = orders.kinds;
 app.locals.when = (value) => value
   ? new Intl.DateTimeFormat("sv-SE", {
     timeZone: "Asia/Ulaanbaatar",

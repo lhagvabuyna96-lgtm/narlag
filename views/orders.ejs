@@ -28,7 +28,9 @@
               <tr>
                 <td><%= order.id %><br><small><%= when(order.created_at) %></small></td>
                 <td><%= day(order.visit_date) %><br><%= order.time_window %></td>
-                <td><%= order.area %><br><%= order.place %></td>
+                <td><%= order.area %><br><%= order.place %>
+                  <% if (order.lat != null && order.lng != null) { %><br><a href="https://www.google.com/maps?q=<%= order.lat %>,<%= order.lng %>" target="_blank" rel="noopener">Газрын зураг</a><% } %>
+                </td>
                 <td>
                   <% if (order.lawn_m2) { %>Зүлэг <%= order.lawn_m2 %> м²<br><% } %>
                   <% if (order.tree_small || order.tree_mid || order.tree_large) { %>

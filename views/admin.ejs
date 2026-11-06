@@ -105,7 +105,9 @@
               <tr>
                 <td><%= order.id %><br><small><%= when(order.created_at) %></small></td>
                 <td><%= order.customer_name %><br><%= order.phone %><% if (order.email) { %><br><%= order.email %><% } %></td>
-                <td><%= day(order.visit_date) %> · <%= order.time_window %><br><%= order.area %>, <%= order.place %></td>
+                <td><%= day(order.visit_date) %> · <%= order.time_window %><br><%= order.area %>, <%= order.place %>
+                  <% if (order.lat != null && order.lng != null) { %><br><a href="https://www.google.com/maps/dir/?api=1&destination=<%= order.lat %>,<%= order.lng %>" target="_blank" rel="noopener">Зам заах</a><% } %>
+                </td>
                 <td>
                   <% if (order.lawn_m2) { %>Зүлэг <%= order.lawn_m2 %> м²<br><% } %>
                   <% if (order.tree_small || order.tree_mid || order.tree_large) { %>

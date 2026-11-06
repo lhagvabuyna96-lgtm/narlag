@@ -13,7 +13,7 @@
     <% if (!orders.length) { %>
       <p class="lede">Захиалга алга.</p>
     <% } else { %>
-      <div class="order-list">
+      <div class="order-list" data-map-key="<%= mapKey %>">
         <% orders.forEach(function (order) {
           var pill = "pill--new";
           if (order.status === "баталгаажсан") pill = "pill--ok";
@@ -36,6 +36,12 @@
               <div>
                 <h3>Газар</h3>
                 <p><%= day(order.visit_date) %> · <%= order.time_window %><br><%= order.area %>, <%= order.place %></p>
+                <% if (order.lat != null && order.lng != null) { %>
+                  <div class="map-frame map-frame--small" data-map-view data-lat="<%= order.lat %>" data-lng="<%= order.lng %>"></div>
+                  <p><a href="https://www.google.com/maps/dir/?api=1&destination=<%= order.lat %>,<%= order.lng %>" target="_blank" rel="noopener">Зам заах</a></p>
+                <% } else { %>
+                  <p class="muted">Энэ захиалгад pin алга.</p>
+                <% } %>
               </div>
               <div>
                 <h3>Ажил</h3>

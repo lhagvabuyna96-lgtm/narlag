@@ -1112,6 +1112,24 @@ legend { font-family: var(--serif); font-size: 1.8rem; margin-bottom: 10px; }
   border-radius: 50%;
   box-shadow: inset -6px -2px 0 0 var(--gold-2);
 }
+.map-frame {
+  height: 320px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--sand);
+  isolation: isolate;
+  z-index: 0;
+}
+.map-frame--small { height: 220px; margin: 8px 0; }
+.map-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 10px;
+}
+.map-actions .muted { margin: 0; }
+
 html[data-theme="dark"] .theme-btn::before {
   box-shadow: none;
   background: radial-gradient(circle at 35% 35%, #fff6d0, var(--gold) 55%, #c98412);

@@ -47,6 +47,14 @@
           <label class="field field--full">Хашаа, байршил
             <input name="place" maxlength="160" placeholder="Хороо, гудамж, хашааны тоот" required>
           </label>
+          <div class="field field--full">
+            <span>Очих цэг</span>
+            <div id="order-map" class="map-frame" data-map-key="<%= mapKey %>"></div>
+            <div class="map-actions">
+              <button class="btn btn--ghost" type="button" id="locate-me">Миний байршил</button>
+              <p class="muted" id="pin-label">Зураг дээр дараад pin-ээ зөөнө.</p>
+            </div>
+          </div>
           <label class="field field--full">Цаг
             <select name="time">
               <option value="Аль ч цаг">Аль ч цаг</option>

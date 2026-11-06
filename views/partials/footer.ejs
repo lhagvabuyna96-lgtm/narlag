@@ -48,6 +48,9 @@
 <script src="/assets/js/pricing.js"></script>
 <script src="/assets/js/basket.js"></script>
 <script src="/assets/js/main.js"></script>
+<% if (mapKey) { %>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<% } %>
 <% (scripts || []).forEach(function (src) { %>
 <script src="<%= src %>"></script>
 <% }) %>

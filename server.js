@@ -101,6 +101,7 @@ async function renderPage(res, view, data = {}) {
     nextPath: "/",
     orders: [],
     offer: "",
+    mapKey: "",
     ...data,
     catalog: catalog.catalogJson(tools)
   });
@@ -186,7 +187,8 @@ app.get(["/hudaldah", "/hudaldah.php"], asyncRoute(async (req, res) => {
 app.get(["/zahialga", "/zahialga.php"], asyncRoute((req, res) => renderPage(res, "order", {
   page: "order",
   title: "Захиалга — Зуслан зүлэг сервис",
-  scripts: ["/assets/js/booking.js"]
+  scripts: ["/assets/js/map-pin.js", "/assets/js/booking.js"],
+  mapKey: process.env.MAPTILER_KEY || ""
 })));
 
 app.get("/nevtreh", asyncRoute((req, res) => {
@@ -408,7 +410,9 @@ app.get("/ajil", requireWorker, asyncRoute(async (req, res) => {
     title: "Захиалга — Зуслан зүлэг сервис",
     orders: await db.listOrders(null),
     notice: req.query.ok === "done" ? "Захиалгыг гүйцэтгэсэн болголоо." : "",
-    error: req.query.err === "cancelled" ? "Цуцалсан захиалгыг гүйцэтгэсэн болгохгүй." : ""
+    error: req.query.err === "cancelled" ? "Цуцалсан захиалгыг гүйцэтгэсэн болгохгүй." : "",
+    scripts: ["/assets/js/map-view.js"],
+    mapKey: process.env.MAPTILER_KEY || ""
   });
 }));
 

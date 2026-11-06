@@ -75,6 +75,8 @@ async function init() {
     );
   `);
   await pool.query('CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON session (expire)');
+  await pool.query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS lat DOUBLE PRECISION");
+  await pool.query("ALTER TABLE orders ADD COLUMN IF NOT EXISTS lng DOUBLE PRECISION");
   await pool.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS job TEXT NOT NULL DEFAULT ''");
   await pool.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS active BOOLEAN NOT NULL DEFAULT true");
   await pool.query(`
@@ -236,16 +238,17 @@ async function insertOrder(order) {
     `INSERT INTO orders (
       id, user_id, customer_name, phone, area, place, visit_date, time_window,
       lawn_m2, tree_small, tree_mid, tree_large, edge, rent_days, delivery, note,
-      items, service, rent, buy, delivery_fee, deposit, total, status
+      items, service, rent, buy, delivery_fee, deposit, total, status, lat, lng
     ) VALUES (
       $1,$2,$3,$4,$5,$6,$7,$8,
       $9,$10,$11,$12,$13,$14,$15,$16,
-      $17::jsonb,$18,$19,$20,$21,$22,$23,'шинэ'
+      $17::jsonb,$18,$19,$20,$21,$22,$23,'шинэ',$24,$25
     )`,
     [
       order.id, order.userId, order.name, order.phone, order.area, order.place, order.date, order.time,
       order.lawn, order.small, order.mid, order.large, order.edge, order.days, order.delivery, order.note,
-      JSON.stringify(order.items), order.service, order.rent, order.buy, order.deliveryFee, order.deposit, order.total
+      JSON.stringify(order.items), order.service, order.rent, order.buy, order.deliveryFee, order.deposit, order.total,
+      order.lat, order.lng
     ]
   );
 }

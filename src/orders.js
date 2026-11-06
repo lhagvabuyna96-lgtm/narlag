@@ -38,6 +38,12 @@ function makeId() {
   return "NS-" + stamp + "-" + Math.floor(10 + Math.random() * 90);
 }
 
+function coordinate(value, min, max) {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n < min || n > max) return null;
+  return Math.round(n * 1e6) / 1e6;
+}
+
 function fail(message) {
   const error = new Error(message);
   error.status = 422;
@@ -65,6 +71,9 @@ async function buildOrder(body, user, toolsById) {
     throw fail("Өнөөдрөөс хойшхи өдөр сонгоно уу.");
   }
   if (!TIMES.includes(time)) time = "Аль ч цаг";
+  const lat = coordinate(body.lat, 41, 53);
+  const lng = coordinate(body.lng, 87, 120);
+  if (lat == null || lng == null) throw fail("Газрын зураг дээр хашааныхаа цэгийг заана уу.");
 
   const lawn = Math.min(prices.num(body.lawn), 20000);
   if (lawn > 0) {
@@ -126,6 +135,8 @@ async function buildOrder(body, user, toolsById) {
     days: items.length ? days : 0,
     delivery: deliveryFee > 0,
     note,
+    lat,
+    lng,
     items,
     service,
     rent,

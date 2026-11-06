@@ -132,6 +132,13 @@
       fail("Өнөөдрөөс хойшхи өдөр сонгоно уу.");
       return;
     }
+    var pin = window.NarlagPin && window.NarlagPin.get();
+    if (!pin) {
+      fail("Газрын зураг дээр хашааныхаа цэгийг заана уу.");
+      var frame = document.getElementById("order-map");
+      if (frame) frame.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
     if (form.elements.website && form.elements.website.value) return;
 
     var button = form.querySelector("[type=submit]");
@@ -144,6 +151,8 @@
       phone: phone,
       area: area,
       place: place,
+      lat: pin.lat,
+      lng: pin.lng,
       date: date,
       time: form.elements.time.value,
       lawn: form.elements.lawn.value,

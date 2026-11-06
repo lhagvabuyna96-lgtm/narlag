@@ -113,9 +113,16 @@ async function seedAdmin() {
     console.warn("ADMIN_EMAIL ба 8-аас урт ADMIN_PASSWORD тавиагүй тул админ үүсээгүй.");
     return;
   }
-  const existing = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
-  if (existing.rowCount) return;
   const passwordHash = await bcrypt.hash(password, 10);
+  const existing = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
+  if (existing.rowCount) {
+    await pool.query(
+      "UPDATE users SET password_hash = $2, role = 'admin' WHERE id = $1",
+      [existing.rows[0].id, passwordHash]
+    );
+    console.log("Админ нууц үг шинэчлэгдлээ:", email);
+    return;
+  }
   await pool.query(
     `INSERT INTO users (name, phone, email, password_hash, role)
      VALUES ($1, $2, $3, $4, 'admin')`,

@@ -29,8 +29,9 @@
     var lawn = price.lawn(form.elements.lawn.value);
     var lawnHigh = price.lawnHigh(form.elements.lawn.value);
     var trees = price.trees(form.elements.small.value, form.elements.mid.value, form.elements.large.value);
+    var treesHigh = price.treesHigh(form.elements.small.value, form.elements.mid.value, form.elements.large.value);
     var edge = form.elements.edge.checked ? price.EDGE : 0;
-    return { lawn: lawn, lawnHigh: lawnHigh, trees: trees, edge: edge, sum: lawn + trees + edge, sumHigh: lawnHigh + trees + edge };
+    return { lawn: lawn, lawnHigh: lawnHigh, trees: trees, treesHigh: treesHigh, edge: edge, sum: lawn + trees + edge, sumHigh: lawnHigh + treesHigh + edge };
   }
 
   function row(label, value) {
@@ -50,10 +51,10 @@
       html += row("Зүлэг, урьдчилсан", money(service.lawn) + " – " + money(service.lawnHigh));
       html += '<p class="summary__note">1 м² нь 300–500₮. Энэ дүн эцсийн биш. Ажилчид очиж талбайг хэмжээд, ажил эхлэхээс өмнө бодит үнийг хэлнэ.</p>';
     }
-    if (service.trees) html += row("Мод засах", money(service.trees));
+    if (service.trees) html += row("Мод засах", money(service.trees) + " – " + money(service.treesHigh));
     if (service.edge) html += row("Ирмэг засах", money(service.edge));
     if (form.elements.large && window.NarlagPrice.num(form.elements.large.value) > 0) {
-      html += '<p class="summary__note">Том модны үнэ үзлэгээр өөрчлөгдөж болно.</p>';
+      html += '<p class="summary__note">Улиас засалт 70,000–120,000₮. Улааж тайрах, шилжүүлэн суулгах ажлын үнэ тарифаас өөр.</p>';
     }
 
     tools.lines.forEach(function (line) {
@@ -73,7 +74,7 @@
     if (grand) {
       var low = service.sum + tools.sum + delivery;
       var high = service.sumHigh + tools.sum + delivery;
-      grand.textContent = service.lawn ? money(low) + " – " + money(high) : money(low);
+      grand.textContent = high > low ? money(low) + " – " + money(high) : money(low);
     }
   }
 

@@ -66,13 +66,13 @@ require __DIR__ . "/partials/header.php";
           <label class="field">Хашааны хэмжээ, м²
             <input name="lawn" type="number" min="0" max="20000" value="0" inputmode="numeric">
           </label>
-          <label class="field">Жижиг мод
+          <label class="field">Бүт 0.5–1.5 м
             <input name="small" type="number" min="0" max="100" value="0" inputmode="numeric">
           </label>
-          <label class="field">Дунд мод
+          <label class="field">Бүт 1.6–2.5 м
             <input name="mid" type="number" min="0" max="100" value="0" inputmode="numeric">
           </label>
-          <label class="field">Том мод
+          <label class="field">Улиас засалт
             <input name="large" type="number" min="0" max="100" value="0" inputmode="numeric">
           </label>
         </div>

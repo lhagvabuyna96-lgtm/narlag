@@ -8,7 +8,7 @@ require __DIR__ . "/partials/header.php";
   <div class="wrap">
     <p class="eyebrow">Үнэ</p>
     <h1>Ойролцоо дүнгээ энд харна</h1>
-    <p>Хашааны хэмжээг м²-ээр оруулахад зүлгийн урьдчилсан дүн гарна. 1 м² нь 300–500₮. Ажилчид очиж хэмжээд бодит үнийг хэлнэ.</p>
+    <p>Ногоон байгууламж, цэцэрлэгжүүлэлт болон түрээсийн тариф. Зүлэг тэгшилгээ 1 м² нь 300–500₮. Ажилчид очиж хэмжээд бодит үнийг хэлнэ.</p>
   </div>
 </section>
 <section class="section">
@@ -19,17 +19,16 @@ require __DIR__ . "/partials/header.php";
           <label class="field">Хашааны хэмжээ, м²
             <input type="number" name="lawn" min="0" max="20000" value="120" inputmode="numeric">
           </label>
-          <label class="field">Жижиг мод, 3 м хүртэл
+          <label class="field">Бүт 0.5–1.5 м, ширхэг
             <input type="number" name="small" min="0" max="100" value="0" inputmode="numeric">
           </label>
-          <label class="field">Дунд мод, 3–6 м
+          <label class="field">Бүт 1.6–2.5 м, ширхэг
             <input type="number" name="mid" min="0" max="100" value="0" inputmode="numeric">
           </label>
-          <label class="field">Том мод, 6 м-ээс дээш
+          <label class="field">Улиас засалт, ширхэг
             <input type="number" name="large" min="0" max="100" value="0" inputmode="numeric">
           </label>
         </div>
-        <label class="check"><input type="checkbox" name="edge"> Ирмэг засах, 25,000₮</label>
       </div>
       <div class="estimate__result">
         <p class="eyebrow">Жишээ тооцоо</p>
@@ -38,27 +37,48 @@ require __DIR__ . "/partials/header.php";
         <a class="btn btn--sun" id="est-link" href="zahialga.php">Энэ тоогоор захиалах</a>
       </div>
     </form>
-    <div class="price-grid" style="margin-top:22px">
-      <article class="price-card">
-        <h3>Зүлэг</h3>
-        <ul>
-          <li>1 м² — 300–500₮, урьдчилсан</li>
-          <li>Жишээ: 200 м² — 60,000–100,000₮</li>
-          <li>Эцсийн үнэ очиж хэмжсэний дараа</li>
-          <li>Ирмэг засах — 25,000₮</li>
-        </ul>
-        <a class="btn btn--line" href="zuileg.php">Зүлэгний хуудас</a>
-      </article>
-      <article class="price-card">
-        <h3>Мод</h3>
-        <ul>
-          <li>Жижиг, 3 м хүртэл — 40,000₮</li>
-          <li>Дунд, 3–6 м — 80,000₮</li>
-          <li>Том, 6 м-ээс өндөр — 150,000₮-өөс</li>
-          <li>Том модыг ирж үзээд нарийвчилна</li>
-        </ul>
-        <a class="btn btn--line" href="mod.php">Модны хуудас</a>
-      </article>
+    <h2 class="serif" style="margin-top:28px">Ногоон байгууламж, цэцэрлэгжүүлэлт</h2>
+    <div class="table-wrap">
+      <table class="sheet">
+        <thead>
+          <tr><th>№</th><th>Үйлчилгээ</th><th>Нэгж</th><th>Үнэ</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Зүлэг тэгшилгээ</td><td>1 м²</td><td>300–500₮</td></tr>
+          <tr><td>2</td><td>Зүлэг тэгшилгээний хаягдал ачилт</td><td>1 тн</td><td>30,000₮</td></tr>
+          <tr><td>3</td><td>Мод, бут тариалт</td><td>1 ш тогоо</td><td>7,000–18,000₮</td></tr>
+          <tr><td>4</td><td>Модны тогоо ухах</td><td>1 ш</td><td>7,000–18,000₮</td></tr>
+          <tr><td>5</td><td>Мод тариалт /тогоолж/</td><td>1 ш</td><td>5,000–15,000₮</td></tr>
+          <tr><td>6</td><td>Мод тариалт /хашаалж/</td><td>1 м</td><td>12,000₮</td></tr>
+          <tr><td>7</td><td>Мод засалт /хашаалсан бут/</td><td>0.5–1.5 м өндөр</td><td>4,000–8,000₮</td></tr>
+          <tr><td>8</td><td>Мод засалт /хашаалсан бут/</td><td>1.6–2.5 м өндөр</td><td>12,000–18,000₮</td></tr>
+          <tr><td>9</td><td>Мод засалт /Улиас, мочирлож засах/</td><td>1 ш</td><td>70,000–120,000₮</td></tr>
+          <tr><td>10</td><td>Мод тайралт /Улиас, улааж тайрах/</td><td>1 ш</td><td>350,000–450,000₮</td></tr>
+          <tr><td>11</td><td>Мод шилжүүлэн суулгах /Шилмүүст, өндөрөөс хамаарч/</td><td>1 ш</td><td>70,000–600,000₮</td></tr>
+          <tr><td>12</td><td>Модны тогоо цэвэрлэгээ</td><td>1 ш</td><td>2,000₮</td></tr>
+          <tr><td>13</td><td>Модны шуудуй цэвэрлэгээ</td><td>1 м</td><td>2,000₮</td></tr>
+          <tr><td>14</td><td>Модыг тогоо сийрэгжүүлэлт /сэргээлт/</td><td>1 ш</td><td>8,000₮</td></tr>
+          <tr><td>15</td><td>Хөрс нийлүүлэлт</td><td>1 тн</td><td>110,000₮</td></tr>
+          <tr><td>16</td><td>Мод бордолт</td><td>1 ш</td><td>12,000₮</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h2 class="serif" style="margin-top:28px">Түрээсийн үйлчилгээ</h2>
+    <div class="table-wrap">
+      <table class="sheet">
+        <thead>
+          <tr><th>№</th><th>Тоног төхөөрөмж</th><th>Хугацаа</th><th>Үнэ</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Зүлэгний машин /Бензин/</td><td>1 өдөр</td><td>100,000₮</td></tr>
+          <tr><td>2</td><td>Зүлэг тайрагч /Механик/</td><td>1 өдөр</td><td>30,000₮</td></tr>
+          <tr><td>3</td><td>Хадуур /Бензин/ + Тармуур</td><td>1 өдөр</td><td>50,000₮</td></tr>
+          <tr><td>4</td><td>Мод засагч хайч /Бензин/ + Тармуур</td><td>1 өдөр</td><td>50,000₮</td></tr>
+          <tr><td>5</td><td>3 м сунадаг А шат</td><td>1 өдөр</td><td>20,000₮</td></tr>
+          <tr><td>6</td><td>Өвс үлээгч /Бензин/</td><td>1 өдөр</td><td>20,000₮</td></tr>
+          <tr><td>7</td><td>Нүх ухагч /Бензин/</td><td>1 өдөр</td><td>50,000₮</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="faq" style="margin-top:36px">
       <div class="faq__item is-open">

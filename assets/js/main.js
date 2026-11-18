@@ -110,24 +110,30 @@
         estimator.elements.mid.value,
         estimator.elements.large.value
       );
-      var edge = estimator.elements.edge.checked ? price.EDGE : 0;
+      var treeHigh = price.treesHigh(
+        estimator.elements.small.value,
+        estimator.elements.mid.value,
+        estimator.elements.large.value
+      );
+      var edgeBox = estimator.elements.edge;
+      var edge = edgeBox && edgeBox.checked ? price.EDGE : 0;
       var rows = [];
       if (lawn) rows.push("Зүлэг " + price.format(lawn) + " – " + price.format(lawnHigh));
-      if (tree) rows.push("Мод " + price.format(tree));
+      if (tree) rows.push("Мод " + price.format(tree) + " – " + price.format(treeHigh));
       if (edge) rows.push("Ирмэг " + price.format(edge));
       if (!rows.length) rows.push("Тоо оруулаагүй байна");
       if (parts) parts.textContent = rows.join(" · ");
       if (total) {
         var low = lawn + tree + edge;
-        var high = lawnHigh + tree + edge;
-        total.textContent = lawn ? price.format(low) + " – " + price.format(high) : price.format(low);
+        var high = lawnHigh + treeHigh + edge;
+        total.textContent = high > low ? price.format(low) + " – " + price.format(high) : price.format(low);
       }
       if (link) {
         var query = new URLSearchParams();
         ["lawn", "small", "mid", "large"].forEach(function (name) {
           query.set(name, estimator.elements[name].value || "0");
         });
-        if (estimator.elements.edge.checked) query.set("edge", "1");
+        if (edgeBox && edgeBox.checked) query.set("edge", "1");
         var base = (link.getAttribute("href") || "zahialga.php").split("?")[0];
         link.href = base + "?" + query.toString();
       }

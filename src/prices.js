@@ -19,11 +19,15 @@ function lawnHigh(m2) {
 }
 
 function trees(small, mid, large) {
-  return num(small) * 40000 + num(mid) * 80000 + num(large) * 150000;
+  return num(small) * 4000 + num(mid) * 12000 + num(large) * 70000;
+}
+
+function treesHigh(small, mid, large) {
+  return num(small) * 8000 + num(mid) * 18000 + num(large) * 120000;
 }
 
 function deposit(buyPrice, qty) {
   return Math.round((buyPrice || 0) * 0.3) * qty;
 }
 
-module.exports = { EDGE, DELIVERY, WEEK_FROM, WEEK_OFF, num, lawn, lawnHigh, trees, deposit };
+module.exports = { EDGE, DELIVERY, WEEK_FROM, WEEK_OFF, num, lawn, lawnHigh, trees, treesHigh, deposit };
